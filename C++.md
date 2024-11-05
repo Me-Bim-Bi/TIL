@@ -67,3 +67,24 @@ int main ()
     // * End of block comment*/
 }
 ````
+
+==============================================================
+5 november, 2024
+
+# Structure:
+```
+- #include <iostream>
+- using namespace std;
+- class
+
+
+- viktig att veta om byte, om hur lång kan en variabel kan vara.
+- int, long, float, double, cha (bara en teken). Varför man använder cha istället för string. 
+
+- elif (python) = else if (C++)
+counter+= 1 (python) = counter++ (C++)
+                        counter--
+```
+
+
+# kolla igen om: getline, ignore, const double, long double, switch-case
