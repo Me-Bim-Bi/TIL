@@ -82,9 +82,40 @@ int main ()
 - int, long, float, double, cha (bara en teken). Varför man använder cha istället för string. 
 
 - elif (python) = else if (C++)
-counter+= 1 (python) = counter++ (C++)
-                        counter--
+counter+= 1 (python) = counter++ (C++) = ++counter
+                        counter-- = --counter
 ```
 
 
 # kolla igen om: getline, ignore, const double, long double, switch-case
+
+==============================================================
+Function:
+- Does not return anything: use "void"
+Ex: 
+void print_hello()
+{
+    std::cout << "Hello!" << std::endl;
+}
+
+
+String:
+När vi skriver "Text" läggs '\0' automatiskt till i slutet
+std::string
+// initialization
+std::string name; //Default initialization: ""
+std::string company = "BTH";
+std::string name2 = name;
+std::string company2(company);
+
+// assignment
+name = "Alice";
+name2 = std::string("Bob");
+
+Convert string to integer: 
+int number = std::stoi(numberString)
+long longNumber = std::stol(numberString)
+numberString = std::to:string(-10);
+
+std::getLine(std::cin, name); // läser från cin till nästa newline
+std::cin >> name; // cin läser bara till nästa whitespace!!!
