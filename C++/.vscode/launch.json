@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "name": "(lldb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/build/Debug/outDebug",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++",
+      "program": "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/build/Debug/outDebug"
+    }
+  ]
+}
