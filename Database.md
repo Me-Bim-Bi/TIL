@@ -2,7 +2,7 @@
 
 ## 1. SQLite:
 - User DB browser for SQLite
-- Basic commands:
+- **Basic commands:**
   
 |Commands                                 | To do                                                |
 | ----------------------------------------- | -------------------------------------------------  |
@@ -17,8 +17,8 @@
 
 ## 2. MariaDB:
 ### a. Installing and using MariaDB via Docker:
-- Install: https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/
-- Docker commands:
+- **Install:** https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/
+- **Docker commands:**
   
 |Commands                                 | To do                                                |
 | ----------------------------------------- | -------------------------------------------------  |
@@ -27,25 +27,34 @@
 |docker exec -it <container's name> bash |start an interactive bash shell inside a running Docker container named db|
 
 ### b. Using MariaDB
-- User:
+- **User**:
   
 |Commands                                 | To do                                                |
 | ----------------------------------------- | -------------------------------------------------  |
-|DROP USER IF EXISTS 'maria'@'localhost'; | Delete user 'maria' if it exists. Should to delete before create a new one|
-|CREATE USER 'maria'@'localhost' IDENTIFIED BY 'P@ssw0rd'; | Create user with name and password |
+|DROP USER IF EXISTS 'maria'@'localhost'; |Delete user 'maria' if it exists. Should to delete before create a new one|
+|CREATE USER 'maria'@'localhost' IDENTIFIED BY 'P@ssw0rd'; |Create user with name and password |
 |GRANT ALL PRIVILEGES ON *.* TO 'maria'@'localhost' WITH GRANT OPTION;|Grant user permissions|
 |FLUSH PRIVILEGES;|Reload the privilege tables in memory. Important to ensures that any changes made to user accounts or permissions take immediate effect without needing to restart the database server.|
 |SHOW GRANTS FOR 'dbadm'@'localhost';|Show the user permissions|
 |select user();|show the user that we used|
 
-- Database:
+- **Database**:
   
 |Commands                                 | To do                                                |
 | ----------------------------------------- | -------------------------------------------------  |
-|DROP USER IF EXISTS 'maria'@'localhost'; | Delete user 'maria' if it exists. Should to delete before create a new one|
-|CREATE USER 'maria'@'localhost' IDENTIFIED BY 'P@ssw0rd'; | Create user with name and password |
-|GRANT ALL PRIVILEGES ON *.* TO 'maria'@'localhost' WITH GRANT OPTION;|Grant user permissions|
-|FLUSH PRIVILEGES;|Reload the privilege tables in memory. Important to ensures that any changes made to user accounts or permissions take immediate effect without needing to restart the database server.|
-|SHOW GRANTS FOR 'dbadm'@'localhost';|Show the user permissions|
-|select user();|show the user that we used|
+|DROP DATABASE IF EXISTS skolan; |Delete database named 'skolan' if it exists.|
+|DROP DATABASE skolan;|Delete database named 'skolan'. An error message will be shown if the database does not exist|
+|CREATE DATABASE IF NOT EXISTS skolan;|Create a databse named 'skolan' if it does not exist|
+|CREATE DATABASE skolan;|Create a databse named 'skolan'. An error message will be shown if the database exists|
+|SHOW DATABASES;|Show all databases|
+|SHOW DATABASES LIKE "%skolan%";|show all databases with name that contain 'skolan'|
 
+- **Table**:
+  
+|Commands                                 | To do                                                |
+| ----------------------------------------- | -------------------------------------------------  |
+|DROP TABLE IF EXISTS larare;|Delete table named 'larare' if it exists.|
+|CREATE TABLE larare
+(akronym CHAR(3),avdelning CHAR(4),fornamn VARCHAR(20),efternamn VARCHAR(20),kon CHAR(1),lon INT,fodd DATE,PRIMARY KEY (akronym));|Creat a table with primary key (unique) is 'akronym'|
+|show tables;|show all tables in database|
+|SELECT * FROM larare;|Show all the tables contents|
