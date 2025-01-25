@@ -58,3 +58,15 @@
 (akronym CHAR(3),avdelning CHAR(4),fornamn VARCHAR(20),efternamn VARCHAR(20),kon CHAR(1),lon INT,fodd DATE,PRIMARY KEY (akronym));|Creat a table with primary key (unique) is 'akronym'|
 |show tables;|show all tables in database|
 |SELECT * FROM larare;|Show all the tables contents|
+
+
+**- SQL Query Execution Order**:
+When a SQL query is executed, the clauses are processed in a specific sequence, often different from their written order. The logical execution order is as follows:
+```
+FROM: Identifies the source tables.
+WHERE: Filters rows before grouping.
+GROUP BY: Groups the filtered rows based on specified columns.
+HAVING: Filters the groups created by GROUP BY based on aggregated values.
+SELECT: Specifies the output columns.
+ORDER BY: Sorts the final result.
+```
