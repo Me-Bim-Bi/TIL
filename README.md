@@ -1,3 +1,3 @@
 # TIL (Today I learn)
 
-# 30/11/2024
+- This is where I store the things I've learned on my path to becoming a programmer or developer (?). Who's know?
