@@ -58,7 +58,15 @@
 (akronym CHAR(3),avdelning CHAR(4),fornamn VARCHAR(20),efternamn VARCHAR(20),kon CHAR(1),lon INT,fodd DATE,PRIMARY KEY (akronym));|Creat a table with primary key (unique) is 'akronym'|
 |show tables;|show all tables in database|
 |SELECT * FROM larare;|Show all the tables contents|
-
+|ALTER TABLE larare ADD COLUMN kompetens INT;|add a new column in the exist table named kompetens with the data type INT (integer).|
+|ALTER TABLE larare DROP COLUMN kompetens;<|delete column named kompentens in the exist table|
+|ALTER TABLE larare ADD COLUMN kompetens INT DEFAULT 1 NOT NULL;|in the exist table, add a new column named kompetens with the data type INT (integer). Sets the default value of the column to 1. If a new row is inserted into the table without explicitly providing a value for kompetens, the database will automatically assign the value 1. Ensures that the column cannot contain NULL values. Every row must have a valid integer value for the kompetens column.|
+|DELETE FROM larare WHERE fornamn = 'Hagrid';|delete rows from the larare table where the value in the fornamn column matches 'Hagrid'|
+|DELETE FROM larare WHERE lon != 'NULL' LIMIT 2;|delete rows from the larare table where the lon column does not have a NULL value, with a limit of 2 rows being deleted|
+|delete from larare;|delete all rows from the larare table, but it will not remove the table itself|
+|select * from larare where fornamn like'%o%';|show all columns from the larare table, filters the rows where the first name contents 'o'|
+|select fornamn, efternamn, lon FROM larare ORDER BY efternamn DESC;|show the first name, last name and salary from table larare orders the results by the efternamn (last name) column in descending order|
+|update larare set lon = lon + 4000 where fornamn = 'Minerva';|update table larare so that increases the salary information by 4000 for the row that the forst name is 'Minerva'|
 
 **- SQL Query Execution Order**:
 When a SQL query is executed, the clauses are processed in a specific sequence, often different from their written order. The logical execution order is as follows:
