@@ -78,3 +78,14 @@ HAVING: Filters the groups created by GROUP BY based on aggregated values.
 SELECT: Specifies the output columns.
 ORDER BY: Sorts the final result.
 ```
+## 3. Node.js:
+### a. Install:
+https://nodejs.org/en/download
+### b. Using node.js:
+- **Docker command**:
+  
+|Commands                                 | To do                                                |
+| ----------------------------------------- | -------------------------------------------------  |
+|docker run -it --rm --entrypoint sh node:22-alpine |run node|
+|node|Using node.js|
+|docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs Workspaces/databas/:/database" --entrypoint sh node:22-alpine|Create and mount the container 'node' with a folder|
