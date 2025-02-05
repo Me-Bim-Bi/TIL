@@ -159,6 +159,7 @@ int main()
     return 0;
 }
 ```
+- Man ska inte ha "cin.ignore()" direkt efter getline.
 
 ### 16. Vad är det för problem med följande kodavsnitt?
 ```
@@ -208,3 +209,22 @@ std::cout<<res<<" "<<i + f<<std::endl;
 - 22 22.5
 - res = int(22.5) = 22. 
 - i + f = 22.5
+
+
+# Vilken uppgift har preprocessorn
+Preprocessorn är en komponent inom programmering och används främst i programmeringsspråk som C och C++ för att förbereda koden innan själva kompileringen sker. 
+
+# En kompilator har som uppgift att:
+- Översätta programkod skriven i ett högnivåspråk (t.ex. C++, Java, eller Python) till ett lågnivåspråk som datorn kan förstå och exekvera, vanligtvis maskinkod eller bytekod
+
+# Länkaren (på engelska "linker") har en viktig roll i utvecklingsprocessen för ett program. 
+- Dess huvuduppgift är att kombinera olika delar av en applikation, inklusive objektfiler och externa bibliotek, till en enda körbar fil eller bibliotek
+
+# När preprocessorn läser #include <iostream>, utförs följande steg:
+- Identifiering av direktiv: Preprocessorn känner igen att #include är en direktiv som ska ersätta den följande texten med innehållet från en fil.
+- Sökning av headerfil: Preprocessorn söker efter filen iostream i systemets standardbibliotek. Eftersom filen refereras med vinkelparenteser (< >), betyder det att preprocessorn ska leta efter filen i de systembibliotek som är definierade i kompilatorn, inte i den aktuella arbetsmappen.
+- Hämta och inkludera filen: Preprocessorn hittar filen iostream (som är en standardbibliotekshuvudfil för C++), och den ersätter direktivet #include <iostream> med innehållet från den filen. Detta innebär att all kod, deklarationer och definitioner i iostream inkluderas i den aktuella filen vid kompilering.
+- Fortsättning av kompileringen: Efter att ha inkluderat innehållet i iostream fortsätter preprocessorn att bearbeta koden och skapar en förkompilerad version av den, som sedan skickas vidare till kompilatorn för vidare översättning.
+
+# I C++ används new och delete:
+- För dynamisk minneshantering, vilket innebär att minne allokeras och frigörs på heapen (eller fristående minnesområde) istället för stacken.
