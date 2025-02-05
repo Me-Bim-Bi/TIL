@@ -86,6 +86,6 @@ https://nodejs.org/en/download
   
 |Commands                                 | To do                                                |
 | ----------------------------------------- | -------------------------------------------------  |
-|docker run -it --rm --entrypoint sh node:22-alpine |run node|
+|docker start node, docker exec -it node sh |run node|
 |node|Using node.js|
 |docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs Workspaces/databas/:/database" --entrypoint sh node:22-alpine|Create and mount the container 'node' with a folder|
