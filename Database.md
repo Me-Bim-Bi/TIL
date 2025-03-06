@@ -64,10 +64,10 @@
 |`SHOW DATABASES LIKE "%skolan%";`|show all databases with name that contain 'skolan'|
 
 - **Reset database**: You must be prepared for data loss due to accidental deletion, lost device, change of device, etc., no one can predict. To do this:
-- You first need to save all your code in different files.
-- Create a reset file, for example: reset-part-1.sql.
-- Connect to the database via user (if you lose the user, create a new one from root).
-- Enter the command: source [file name];. Ten ten. You have your data back. Congrats!
+  - You first need to save all your code in different files.
+  - Create a reset file, for example: reset-part-1.sql.
+  - Connect to the database via user (if you lose the user, create a new one from root).
+  - Enter the command: source [file name]; . Ten ten. You have your data back. Congrats!
    
 - **Table**:
   
@@ -96,7 +96,6 @@
 |`SELECT fornamn, fodd, CURDATE() AS `Dagens datum`,CURTIME() AS `Klockslag` FROM larare;`|retrieves the first name (fornamn) and birth year (fodd) of individuals from the larare table, along with the current date and time|
 |`SELECT fornamn, fodd FROM larare WHERE YEAR(fodd) < 1950 AND YEAR(fodd) > 1939;`|Show the teachers borns in the 40s|
 |`CREATE VIEW v_namn_alder AS SELECT CONCAT(fornamn, ' ', efternamn, ' (', LOWER(avdelning), ')') AS namn TIMESTAMPDIFF(YEAR, fodd, CURDATE()) AS alder FROM larare; SELECT * FROM v_namn_alder;`|create and use a view named v_namn_alder, which formats names and calculates ages for individuals in the larare table. After creating the view, the second query retrieves all data from it|
-
 
 **- SQL Query Execution Order**:
 When a SQL query is executed, the clauses are processed in a specific sequence, often different from their written order. The logical execution order is as follows:
@@ -160,6 +159,8 @@ https://nodejs.org/en/download
 ### a. Install:
 - https://npmjs.com/package/mysql
 - https://npmjs.com/package/promise-mysql
+- https://www.npmjs.com/package/cli-table3
+  
 ### b. Using:
 | Commands | Description |
 | ----------------------------------------- | ------------------------------------------------- |
@@ -196,3 +197,28 @@ for (const row of res) {
 ```
     - In the code you provided, the numbers 10, 20, and 8 are used as arguments to the padEnd() and padStart() methods, which control how strings are padded to a certain length. 
     - These methods help format the output by ensuring that the strings have consistent lengths when displayed. 
+
+- Example 3: Module for read data from the keyboard
+```
+// Read from commandline
+const readline = require("readline");
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// Promisify rl.question to question
+const util = require("util");
+
+rl.question[util.promisify.custom] = (arg) => {
+    return new Promise((resolve) => {
+        rl.question(arg, resolve);
+    });
+};
+
+const question = util.promisify(rl.question);
+
+module.exports = { question, rl };
+```
+## 6. ER-modellering:
+När man har relation som många - många => måste vi bryta upp det till (typ: film och skadespelare är många - många) då blir det kanske en film med 3 skadespelarar => 3 rader.
