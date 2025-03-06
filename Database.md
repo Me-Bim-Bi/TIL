@@ -63,7 +63,12 @@
 |`SHOW DATABASES;`|Show all databases|
 |`SHOW DATABASES LIKE "%skolan%";`|show all databases with name that contain 'skolan'|
 
-
+- **Reset dabase**: You must be prepared for data loss due to accidental deletion, lost device, change of device, etc., no one can predict. To do this:
+- You first need to save all your code in different files.
+- Create a reset file, for example: reset-part-1.sql.
+- Connect to the database via user (if you lose the user, create a new one from root).
+- Enter the command: source [file name];. Ten ten. You have your data back. Congrats!
+   
 - **Table**:
   
 |Commands                                 | To do                                                |
