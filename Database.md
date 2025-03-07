@@ -163,13 +163,63 @@ https://nodejs.org/en/download
 - https://www.npmjs.com/package/cli-table3
   
 ### b. Using:
-| Commands | Description |
+|     Commands     |     Description     |
 | ----------------------------------------- | ------------------------------------------------- |
-| `npm init` | Create a `package.json` file |
-| `npm install mysql promise-mysql` |install two packages via npm: mysql (This is the official MySQL client library for Node.js, allowing you to connect to and interact with a MySQL database.) and promise-mysql (This is a wrapper around the mysql package that provides a Promise-based API, making it easier to work with asynchronous operations using async/await.)|
-| `npm install cli-table3` | install an NPM package that helps format tabular data in a structured way for displaying in the terminal |
+|     `npm init`     | Create a `package.json` file |
+|     `npm install mysql promise-mysql`     |install two packages via npm: mysql (This is the official MySQL client library for Node.js, allowing you to connect to and interact with a MySQL database.) and promise-mysql (This is a wrapper around the mysql package that provides a Promise-based API, making it easier to work with asynchronous operations using async/await.)|
 
-### c. Examples about javascript connect to MySQL
+- **Var, let and const**:
+    - ✅ Use const if the value does not need to change.
+    - ✅ Use let if the value can change within the scope of {}.
+    - ❌ Avoid using var because the scope is unsafe and prone to errors.
+
+- **Math**:
+  
+|     Commands     |     Description     |
+| ----------------------------------------- | ------------------------------------------------- |
+|     `Math.random()`     | Always returns a float number lower than 1 |
+|     `Math.random() * (max-min) + min`     |Returns a float number lower than (max - min) and more than and equal min|
+|     `Math.round()`     | Round the result|
+|     `Math.floor(Math.random() * max`     | Returns a random integer from 0 to max|
+|     `Math.floor(Math.random() * max) + 1`     | Returns a random integer from 1 to max|
+
+- **Print output to console**:
+
+|     Commands     |     Description     |
+| ----------------------------------------- | ------------------------------------------------- |
+|     `console.info();`     |The same as console.log(), but semanticcally meant for info. May have an "info" label or different styling in some browsers.|
+|     `console.log()`     |Usually use for general debugging and printing variables|
+
+    - Example of print output to console:
+    ```
+    message = `I'm thinking of number ${thinking}.\n`
+        + `Youre guess is ${guess}.\n`
+        + `You guessed right? `
+        + (thinking === guess);
+    console.info(message);
+    ```
+- **Class and module**:
+    - Class:
+        - Uses constructor to initialize objects.
+        - Supports inheritance using extends.
+        - Uses super to call parent class methods.
+        - Private methods (#method()) introduced in ES2020.
+    - Module:
+        - Uses export to make functions, variables, or classes available for import.
+        - Uses import to bring in exported data from other modules.
+        - Supports both named exports and default exports.
+        - Helps in organizing code efficiently across multiple files.
+    - When to Use Class vs. Module?
+
+        |     Requirement       |     Use Class     |     Use Module     |
+        | --------------------- | ------------------|--------------------|
+        |Need objects with properties and methods	|✅	|❌|
+        |Need inheritance from a parent class	|✅|	❌|
+        |Need to split code into multiple files	|❌|	✅|
+        |Need to avoid variable name conflicts	|❌|	✅|
+        |Need object-oriented programming (OOP)	|✅	|❌|
+
+### c. Examples about javascript and javascript connect to MySQL
 - Example 1: 
 ```
 /**
@@ -202,24 +252,24 @@ for (const row of res) {
 - Example 3: Module for read data from the keyboard
 ```
 // Read from commandline
-const readline = require("readline");
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+const readline = require("readline"); //imports the buit-in Node.js module `readline, which allows interaction with the command line
+const rl = readline.createInterface({ //creates an instance of the `readline`interface, enabling reading from and writing to the terminal
+    input: process.stdin,            //reads input from the keyboard
+    output: process.stdout          //writes output to the console
 });
 
 // Promisify rl.question to question
 const util = require("util");
 
-rl.question[util.promisify.custom] = (arg) => {
+rl.question[util.promisify.custom] = (arg) => { //takes an argument (the question string) and returns a Promise
     return new Promise((resolve) => {
-        rl.question(arg, resolve);
+        rl.question(arg, resolve);    //calls the original `rl.question`and resolves the answer using the provided callback. Allows ´rl.question`to be used asynchoronously with await
     });
 };
 
-const question = util.promisify(rl.question);
+const question = util.promisify(rl.question); //converts `rl.question` into a Promise-based function
 
-module.exports = { question, rl };
+module.exports = { question }; //export the question module.
 ```
 
 ==========//==========//==========//==========//==========//==========//==========
