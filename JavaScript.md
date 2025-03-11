@@ -53,7 +53,8 @@
 |     `console.log();`     |Usually use for general debugging and printing variables|
 |     `console.warn("Invalid command");`     |Print warning|
 
-    - Example of print a message to console:
+- _Example of print a message to console:_
+    
     ```
     message = `I'm thinking of number ${thinking}.\n`
         + `Youre guess is ${guess}.\n`
@@ -61,7 +62,9 @@
         + (thinking === guess);
     console.info(message);
     ```
-    - Example about check and convert data with Date format:
+    
+- E_xample about check and convert data with Date format:_
+    
     ```
     function teacherAsTable(res) {
     res.forEach(teacher => {
@@ -72,7 +75,7 @@
         }
     });
     console.table(res);
-}
+    }
     ```
     
 - **Class and module**:
@@ -96,7 +99,56 @@
         |Need to avoid variable name conflicts	|❌|	✅|
         |Need object-oriented programming (OOP)	|✅	|❌|
 
+- **substring**: 
+    - Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
+    - Extracts characters from indexStart up to but not including indexEnd. In particular:
+        - If indexEnd is omitted, substring() extracts characters to the end of the string.
+        -  If indexStart is equal to indexEnd, substring() returns an empty string.
+        - If indexStart is greater than indexEnd, then the effect of substring() is as if the two arguments were swapped; see example below.
+    - Syntax:
+      
+    ```
+    substring(indexStart)
+    substring(indexStart, indexEnd)
+    ```
+
+    - Parameters
+        - indexStart: The index of the first character to include in the returned substring.
+        - indexEnd: Optional: The index of the first character to exclude from the returned substring.
+    - Return value: A new string containing the specified part of the given string.
+    - Exempel: const anyString = "Mozilla";
+  
+    ```
+    console.log(anyString.substring(0, 1)); // "M"
+    console.log(anyString.substring(1, 0)); // "M"
     
+    console.log(anyString.substring(0, 6)); // "Mozill"
+    
+    console.log(anyString.substring(4)); // "lla"
+    console.log(anyString.substring(4, 7)); // "lla"
+    
+    console.log(anyString.substring(0, 7)); // "Mozilla"
+    console.log(anyString.substring(0, 10)); // "Mozilla"
+    ```
+    
+    ```
+    const text = "Mozilla";
+    
+    // Takes 4 last characters of string
+    console.log(text.substring(text.length - 4)); // prints "illa"
+    
+    // Takes 5 last characters of string
+    console.log(text.substring(text.length - 5)); // prints "zilla"
+    ```
+
+- **if sats**
+    - Source: https://www.w3schools.com/js/js_if_else.asp
+    - Syntax: 
+    ```
+    if (condition) {
+      //  block of code to be executed if the condition is true
+    }
+    ```
 ==========//==========//==========//==========//==========//==========//==========
 
 ## 3. JavaScript connect to MySQL:
@@ -113,9 +165,14 @@
 |     `npm install mysql promise-mysql`     |install two packages via npm: mysql (This is the official MySQL client library for Node.js, allowing you to connect to and interact with a MySQL database.) and promise-mysql (This is a wrapper around the mysql package that provides a Promise-based API, making it easier to work with asynchronous operations using async/await.)|
 |     `npm install console.table --save`     | Install console.table module |
 
+==========//==========//==========//==========//==========//==========//==========
 
-### c. Examples about javascript and javascript connect to MySQL
-- Example 1: 
+## 4. Examples about javascript and javascript connect to MySQL
+- **Example 1**:
+    - The comment provides documentation for the function, explaining that it's the main function of the program, that it's asynchronous (async), and that it doesn't return any value (void). 
+    - It is mainly for human readers and tools that generate documentation from code comments.
+    - This type of documentation is helpful for maintaining and understanding the code, especially when it's part of a larger project or when the code is being worked on by multiple developers.
+      
 ```
 /**
  * Main function.
@@ -124,11 +181,11 @@
  * @returns void
  */
 ```
-    - The comment provides documentation for the function, explaining that it's the main function of the program, that it's asynchronous (async), and that it doesn't return any value (void). 
-    - It is mainly for human readers and tools that generate documentation from code comments.
-    - This type of documentation is helpful for maintaining and understanding the code, especially when it's part of a larger project or when the code is being worked on by multiple developers.
 
-- Example 2:
+- **Example 2**:
+    - In the code you provided, the numbers 10, 20, and 8 are used as arguments to the padEnd() and padStart() methods, which control how strings are padded to a certain length. 
+    - These methods help format the output by ensuring that the strings have consistent lengths when displayed.
+      
 ```
 for (const row of res) {
         str += "| ";
@@ -141,10 +198,7 @@ for (const row of res) {
         str += row.lon.toString().padStart(8);
         str += " |\n";
 ```
-    - In the code you provided, the numbers 10, 20, and 8 are used as arguments to the padEnd() and padStart() methods, which control how strings are padded to a certain length. 
-    - These methods help format the output by ensuring that the strings have consistent lengths when displayed. 
-
-- Example 3: Module for read data from the keyboard
+- **Example 3: Module for read data from the keyboard**
 ```
 // Read from commandline
 const readline = require("readline"); //imports the buit-in Node.js module `readline, which allows interaction with the command line
@@ -165,49 +219,4 @@ rl.question[util.promisify.custom] = (arg) => { //takes an argument (the questio
 const question = util.promisify(rl.question); //converts `rl.question` into a Promise-based function
 
 module.exports = { question }; //export the question module.
-## substring: 
-- Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
-- Extracts characters from indexStart up to but not including indexEnd. In particular:
-    - If indexEnd is omitted, substring() extracts characters to the end of the string.
-    -  If indexStart is equal to indexEnd, substring() returns an empty string.
-    - If indexStart is greater than indexEnd, then the effect of substring() is as if the two arguments were swapped; see example below.
-- Syntax: 
-```
-substring(indexStart)
-substring(indexStart, indexEnd)
-```
-- Parameters
-    - indexStart: The index of the first character to include in the returned substring.
-    - indexEnd: Optional: The index of the first character to exclude from the returned substring.
-- Return value: A new string containing the specified part of the given string.
-- Exempel: const anyString = "Mozilla";
-```
-console.log(anyString.substring(0, 1)); // "M"
-console.log(anyString.substring(1, 0)); // "M"
-
-console.log(anyString.substring(0, 6)); // "Mozill"
-
-console.log(anyString.substring(4)); // "lla"
-console.log(anyString.substring(4, 7)); // "lla"
-
-console.log(anyString.substring(0, 7)); // "Mozilla"
-console.log(anyString.substring(0, 10)); // "Mozilla"
-```
-```
-const text = "Mozilla";
-
-// Takes 4 last characters of string
-console.log(text.substring(text.length - 4)); // prints "illa"
-
-// Takes 5 last characters of string
-console.log(text.substring(text.length - 5)); // prints "zilla"
-```
-
-## if sats
-- Source: https://www.w3schools.com/js/js_if_else.asp
-- Syntax: 
-```
-if (condition) {
-  //  block of code to be executed if the condition is true
-}
 ```
