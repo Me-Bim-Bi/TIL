@@ -76,7 +76,9 @@
 | ----------------------------------------- | -------------------------------------------------  |
 |`DROP TABLE IF EXISTS larare;`|Delete table named 'larare' if it exists.|
 |`CREATE TABLE larare(akronym CHAR(3),avdelning CHAR(4),fornamn VARCHAR(20),efternamn VARCHAR(20),kon CHAR(1),lon INT,fodd DATE,PRIMARY KEY (akronym));`|Creat a table with primary key (unique) is 'akronym'|
-|show tables;|show all tables in database|
+|`SHOW CREATE TABLE <table_name>;`|show how a table is created|
+|`SHOW CREATE TABLE <table_name> \G;`|show how a table is created line by line|
+|`show tables;`|show all tables in database|
 |`SELECT * FROM larare;`|Show all the tables contents|
 |`ALTER TABLE larare ADD COLUMN kompetens INT;`|add a new column in the exist table named kompetens with the data type INT (integer).|
 |`ALTER TABLE larare DROP COLUMN kompetens;`|delete column named kompentens in the exist table|
@@ -98,6 +100,10 @@
 |`SELECT fornamn, fodd FROM larare WHERE YEAR(fodd) < 1950 AND YEAR(fodd) > 1939;`|Show the teachers borns in the 40s|
 |`CREATE VIEW v_namn_alder AS SELECT CONCAT(fornamn, ' ', efternamn, ' (', LOWER(avdelning), ')') AS namn TIMESTAMPDIFF(YEAR, fodd, CURDATE()) AS alder FROM larare; SELECT * FROM v_namn_alder;`|create and use a view named v_namn_alder, which formats names and calculates ages for individuals in the larare table. After creating the view, the second query retrieves all data from it|
 
+- **Inside a table**:
+    - Can use `AUTO_INCREMENT` to automatically generate a unique value for a column when a new record is inserted into a table.
+    - `FOREIGN KEY (kurskod) REFERENCES kurs(kod)`to link kurskor i kurstillfalle table med kod i kurs table. If you want to delete a table, you have to start dropping the one that doesn't have any other table linked to it. In this case, we need to drop kurstillfallet table forst, then kurs table.
+
 **- SQL Query Execution Order**:
 When a SQL query is executed, the clauses are processed in a specific sequence, often different from their written order. The logical execution order is as follows:
 ```
@@ -108,7 +114,63 @@ HAVING: Filters the groups created by GROUP BY based on aggregated values.
 SELECT: Specifies the output columns.
 ORDER BY: Sorts the final result.
 ```
+FIELDS TERMINATED BY ',':
+This defines how the fields (columns) in the CSV file are separated. In this case, the fields are separated by commas (','), which is typical in CSV files.
+ENCLOSED BY '"':
+This specifies that fields in the CSV file may be enclosed by double quotes ("). This is useful if some fields contain commas or special characters. For example, the field "John, Doe" would be read as a single value even though it contains a comma.
+LINES TERMINATED BY '\n':
+This defines how rows in the CSV file are separated. In this case, rows are separated by newline characters ('\n'), which is common in Unix-style CSV files. It tells MySQL where one line ends and another begins.
+IGNORE 1 LINES:
+This tells MySQL to skip the first line of the CSV file, typically because it contains column headers rather than data. So, the first line will be ignored, and the data starts from the second line.
 
+- **Join the tables**:
+```
+SELECT
+    CONCAT(k.namn, ' (', k.kod,')') AS Kursnamn,
+    CONCAT(a.fornamn, ' ', a.efternamn, ' (', a.akronym, ')') AS Larare,
+    a.alder AS Alder
+FROM v_larare_alsta AS                  //Use the 'v_larare_alsta' table and alias it as 'a'
+    JOIN kurstillfalle AS kt            //join with the kurstillfalle table
+        ON a.akronym = kt.kursansvarig  //match rows based on the 'akronym' field in 'a' and 'kursansvarig' field in 'kt'
+    JOIN kurs AS k
+        ON k.kod = kt.kurskod
+ORDER BY alder DESC, k.namn ASC
+;
+````
+- The different between JOIN, OUTER JOIN, LEFT/RIGHT OUTER JOIN
+|       JOIN Type       |       Includes Non-Matching Rows?         |       From Which Table?       |
+| --------------------- | ----------------------------------------- | ----------------------------- |
+| `JOIN / INNER JOIN` | ❌ No | Only matching rows. If there is no mathch, the row is not shown|
+| `LEFT OUTER JOIN` | ✅ Yes | All from the left table. Show NULL if there is no connection |
+| `RIGHT OUTER JOIN` | ✅ Yes | All from the right table. Show NULL if there is no connection |
+| `OUTER JOIN` | ✅ Yes | All from the table, even if there is no matching row in the other table |
+
+**- LOAD DATA INFILE**:
+```
+LOAD DATA LOCAL INFILE 'kurs.csv'   //load data from file named kurs.csv
+INTO TABLE kurs                     //to the table named kurs
+CHARSET utf8                        //specifies the character encoding used in the file. In this case, it's utf8
+FIELDS                              //This defines how the fields (columns) in the CSV file are separated and how the fields enclosed by. 
+    TERMINATED BY ','               //In this case, the fields are separated by commas (',')
+    ENCLOSED BY '"'                 //In this case, the fields are enclosed by double quotes (")
+LINES                               //This defines how rows in the CSV file are separated.
+    TERMINATED BY '\n'              //In this case, rows are separated by newline characters ('\n')
+IGNORE 1 LINES                      //This tells MySQL to skip the first line of the CSV file, typically because it contains column headers rather than data
+;
+```
+```
+LOAD DATA LOCAL INFILE 'kurstillfalle.csv'
+INTO TABLE kurstillfalle
+CHARSET utf8
+FIELDS
+    TERMINATED BY ','
+    ENCLOSED BY '"'
+LINES
+    TERMINATED BY '\n'
+IGNORE 1 LINES
+    (kurskod, kursansvarig, lasperiod);`//Ignore column id
+;
+```
 ==========//==========//==========//==========//==========//==========//==========
 
 ## 3. Node.js:
@@ -160,13 +222,18 @@ https://nodejs.org/en/download
 ### a. Install:
 - https://npmjs.com/package/mysql
 - https://npmjs.com/package/promise-mysql
-- https://www.npmjs.com/package/cli-table3
+- https://www.npmjs.com/package/cli-table3 : to have a nice table
+- https://www.npmjs.com/package/console.table : to have a nice table
   
 ### b. Using:
 |     Commands     |     Description     |
 | ----------------------------------------- | ------------------------------------------------- |
 |     `npm init`     | Create a `package.json` file |
 |     `npm install mysql promise-mysql`     |install two packages via npm: mysql (This is the official MySQL client library for Node.js, allowing you to connect to and interact with a MySQL database.) and promise-mysql (This is a wrapper around the mysql package that provides a Promise-based API, making it easier to work with asynchronous operations using async/await.)|
+|     `npm install console.table --save`     | Install console.table module |
+
+
+
 
 - **Var, let and const**:
     - ✅ Use const if the value does not need to change.
@@ -188,15 +255,29 @@ https://nodejs.org/en/download
 |     Commands     |     Description     |
 | ----------------------------------------- | ------------------------------------------------- |
 |     `console.info();`     |The same as console.log(), but semanticcally meant for info. May have an "info" label or different styling in some browsers.|
-|     `console.log()`     |Usually use for general debugging and printing variables|
+|     `console.log();`     |Usually use for general debugging and printing variables|
+|     `console.warn("Invalid command");`     |Print warning|
 
-    - Example of print output to console:
+    - Example of print a message to console:
     ```
     message = `I'm thinking of number ${thinking}.\n`
         + `Youre guess is ${guess}.\n`
         + `You guessed right? `
         + (thinking === guess);
     console.info(message);
+    ```
+    - Example about check and convert data with Date format:
+    ```
+    function teacherAsTable(res) {
+    res.forEach(teacher => {
+        if (teacher.fodd instanceof Date) { //check if teacher.fodd is Date format
+            teacher.fodd = teacher.fodd.toISOString().split('T')[0]; // Formats to YYYY-MM-DD, keep the result before "T"
+            //toISOSstring is the method converts a Date object into a string in ISO 8601 format
+            //which looks like: YYYY-MM-DDTHH:mm:ss.sssZ, so that T  date and time
+        }
+    });
+    console.table(res);
+}
     ```
 - **Class and module**:
     - Class:
