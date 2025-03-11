@@ -138,12 +138,13 @@ ORDER BY alder DESC, k.namn ASC
 ;
 ````
 - The different between JOIN, OUTER JOIN, LEFT/RIGHT OUTER JOIN
+  
 |       JOIN Type       |       Includes Non-Matching Rows?         |       From Which Table?       |
 | --------------------- | ----------------------------------------- | ----------------------------- |
-| `JOIN / INNER JOIN` | ❌ No | Only matching rows. If there is no mathch, the row is not shown|
-| `LEFT OUTER JOIN` | ✅ Yes | All from the left table. Show NULL if there is no connection |
-| `RIGHT OUTER JOIN` | ✅ Yes | All from the right table. Show NULL if there is no connection |
-| `OUTER JOIN` | ✅ Yes | All from the table, even if there is no matching row in the other table |
+| `JOIN / INNER JOIN`   | ❌ No                                     | Only matching rows. If there is no mathch, the row is not shown|
+| `LEFT OUTER JOIN`     | ✅ Yes                                    | All from the left table. Show NULL if there is no connection |
+| `RIGHT OUTER JOIN`    | ✅ Yes                                    | All from the right table. Show NULL if there is no connection |
+| `OUTER JOIN`          | ✅ Yes                                    | All from the table, even if there is no matching row in the other table |
 
 **- LOAD DATA INFILE**:
 ```
