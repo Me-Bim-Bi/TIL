@@ -113,15 +113,6 @@ HAVING: Filters the groups created by GROUP BY based on aggregated values.
 SELECT: Specifies the output columns.
 ORDER BY: Sorts the final result.
 ```
-FIELDS TERMINATED BY ',':
-This defines how the fields (columns) in the CSV file are separated. In this case, the fields are separated by commas (','), which is typical in CSV files.
-ENCLOSED BY '"':
-This specifies that fields in the CSV file may be enclosed by double quotes ("). This is useful if some fields contain commas or special characters. For example, the field "John, Doe" would be read as a single value even though it contains a comma.
-LINES TERMINATED BY '\n':
-This defines how rows in the CSV file are separated. In this case, rows are separated by newline characters ('\n'), which is common in Unix-style CSV files. It tells MySQL where one line ends and another begins.
-IGNORE 1 LINES:
-This tells MySQL to skip the first line of the CSV file, typically because it contains column headers rather than data. So, the first line will be ignored, and the data starts from the second line.
-
 - **Join the tables**:
 ```
 SELECT
