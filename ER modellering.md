@@ -1,5 +1,5 @@
-# ER MODELING:
-## 1. Database Modeling - Phases and Steps:
+# ER MODELLRING:
+## 1. Database Modellering - Phases and Steps:
 - Three phases: Conceptual modeling, logical modeling, physical modeling.
 - Ten steps:
   - _Conceptual_:

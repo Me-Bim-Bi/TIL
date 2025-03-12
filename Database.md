@@ -126,17 +126,17 @@ FROM v_larare_alsta AS                  //Use the 'v_larare_alsta' table and ali
         ON k.kod = kt.kurskod
 ORDER BY alder DESC, k.namn ASC
 ;
-````
+```
 - The different between JOIN, OUTER JOIN, LEFT/RIGHT OUTER JOIN
   
 |       JOIN Type       |       Includes Non-Matching Rows?         |       From Which Table?       |
 | --------------------- | ----------------------------------------- | ----------------------------- |
 | `JOIN / INNER JOIN`   | ❌ No                                     | Only matching rows. If there is no mathch, the row is not shown|
-| `LEFT OUTER JOIN`     | ✅ Yes                                    | All from the left table. Show NULL if there is no connection |
-| `RIGHT OUTER JOIN`    | ✅ Yes                                    | All from the right table. Show NULL if there is no connection |
+| `LEFT OUTER JOIN`     | ✅ Yes                                    | All from the left table. Show NULL if there is no connection. For example: the teachers who are not in charge of any course => show "NULL" in column "Kurskod" for those teachers |
+| `RIGHT OUTER JOIN`    | ✅ Yes                                    | All from the right table. Show NULL if there is no connection. For example: the teachers who are not in charge of any course => show "NULL" in column "Kurskod" for those teachers|
 | `OUTER JOIN`          | ✅ Yes                                    | All from the table, even if there is no matching row in the other table |
 
-**- LOAD DATA INFILE**:
+- **LOAD DATA INFILE**:
 ```
 LOAD DATA LOCAL INFILE 'kurs.csv'   //load data from file named kurs.csv
 INTO TABLE kurs                     //to the table named kurs
@@ -162,6 +162,48 @@ IGNORE 1 LINES
     (kurskod, kursansvarig, lasperiod);`//Ignore column id
 ;
 ```
+
+- **UNION:**
+
+```
+SELECT
+    *
+FROM kurstillfalle
+WHERE               //find and show all information in table kurstillfalle that kursanvarig match with the teachers that work for "DIDD" apartment
+    kursansvarig IN (
+        SELECT
+            akronym
+        FROM larare
+        WHERE
+            avdelning = 'DIDD'
+    )
+;
+```
+
+- **UNION:**
+
+```
+(
+    SELECT akronym, avdelning FROM larare WHERE avdelning = 'DIDD'
+)
+UNION //Show akronym, avdelning from table larare that have apartment named "DIDD" and "DIPT". The result start with "DIDD", then "DIPT"
+(
+    SELECT akronym, avdelning FROM larare WHERE avdelning = 'DIPT'
+)
+;
+```
+
+- Back-up the database: use mariadb-dump or mysqldump
+|Commands                                 | To do                                                |
+| ----------------------------------------- | -------------------------------------------------  |
+|`which mariadb`|Check where the command located |
+|`which mysqldump`|Check where the command located|
+|`mysqldump -u maria -p skolan`|create a back-up of the database named skolan|
+|`mysqldump -u maria -p --result-file=skolan.sql skolan`|save the back-up commands to the file named skolan.sql|
+|`use skolan1`, `source skolan.sql`|back-up everything to the database named skolan1|
+
+
+
 ==========//==========//==========//==========//==========//==========//==========
 
 ## 3. Node.js:
