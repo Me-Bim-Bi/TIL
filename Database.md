@@ -6,7 +6,7 @@
 3. Node.js:
 4. JavaScript: Moved to JavaScript.md
 5. JavaScript connect to MySQL: Moved to JavaScript.md
-6. ER modeling: Moved to ER modeleing
+6. ER modellering: Moved to ER modellering
 
 ===============================================================================
 
