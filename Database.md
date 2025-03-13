@@ -194,15 +194,14 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 ```
 
 - Back-up the database: use mariadb-dump or mysqldump
+  
 |Commands                                 | To do                                                |
-| ----------------------------------------- | -------------------------------------------------  |
+| --------------------------------------- | ---------------------------------------------------- |
 |`which mariadb`|Check where the command located |
 |`which mysqldump`|Check where the command located|
 |`mysqldump -u maria -p skolan`|create a back-up of the database named skolan|
 |`mysqldump -u maria -p --result-file=skolan.sql skolan`|save the back-up commands to the file named skolan.sql|
 |`use skolan1`, `source skolan.sql`|back-up everything to the database named skolan1|
-
-
 
 ==========//==========//==========//==========//==========//==========//==========
 
@@ -213,7 +212,7 @@ https://nodejs.org/en/download
 - **Docker command**:
   
 |Commands                                 | To do                                                |
-| ----------------------------------------- | -------------------------------------------------  |
+| --------------------------------------- | ---------------------------------------------------- |
 |`docker start node, docker exec -it node sh`|run node|
 |`node`|Use node|
 |`docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs Workspaces/databas/:/database" --entrypoint sh node:22-alpine`|Create and mount the container 'node' with a folder|
