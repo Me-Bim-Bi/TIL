@@ -1,5 +1,5 @@
-# ER MODELLRING:
-## 1. Database Modellering - Phases and Steps:
+# ER MODEL:
+## 1. Database Model - Phases and Steps:
 - Three phases: Conceptual modeling, logical modeling, physical modeling.
 - Ten steps:
   - _Conceptual_:
@@ -10,8 +10,8 @@
       - 5.Add cardinality: For example, "one movie can have many actors."
       - 6.Define attributes and candidate keys: Answer the question, "What makes a movie unique?" (e.g., movie ID).
   - _Logical_:
-      - 7.Convert to a relational model: Break down many-to-many relationships.
-      - 8.Define primary and foreign keys: Adjust the diagram by introducing primary keys (PK) and foreign keys (FK) along with additional attributes.
+      - 7.Convert to a relational model
+      - 8.Define primary and foreign keys
   - _Physical_:
       - 9.Create SQL DDL for tables.
       - 10.List the functions the database should support (API).
@@ -19,8 +19,9 @@ Diagrams can be created using different tools like paper, draw.io, or Dia Diagra
 Many-to-many relationships must be broken down into separate tables (e.g., a movie with three actors results in three rows).
 Document everything as clearly as possible.
 
-## 2.. Conceptual Modeling:
-- **ER Modeling**:
+## 2.. Conceptual Model:
+- **ER Model**:
+    - More information can find at: https://www.geeksforgeeks.org/introduction-of-er-model/ 
     - Entities as boxes: Represent objects in the database using **rectangles**.
     - Relationships: Depict connections between entities. Answer key questions: What is the nature of the relationship? (e.g., a person and a house can have relationships like "lives in" or "owns").
 What is the cardinality? (e.g., 1-1 means one-to-one, N-M means many-to-many, and N-1 means a person can live in one house, but a house can have multiple residents). Relationships are represented as **diamonds between rectangles.**
@@ -40,4 +41,13 @@ Indicate weak entities by underlining the apartment number and using **dashed li
 - **Extended ER Diagrams**: Subclasses and inheritance: Entities can be specialized into subclasses (e.g., a "person" can be a "student," "teacher," or "astronaut").
 - Once the conceptual model is complete, it needs to be translated into the relational model.
 
-  
+## 3. Logical model
+- Convert to a relational model: Break down many-to-many relationships.
+    - No many-to-many relationships (N:M). 
+    - No multi-valued attributes.
+    - Only one value in each cell.
+    - Each row is unique.
+    - No complex relationships.
+- Define primary and foreign keys, data type: Adjust the diagram by introducing primary keys (PK) and foreign keys (FK) along with additional attributes.
+
+

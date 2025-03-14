@@ -220,3 +220,35 @@ const question = util.promisify(rl.question); //converts `rl.question` into a Pr
 
 module.exports = { question }; //export the question module.
 ```
+
+==========//==========//==========//==========//==========//==========//==========
+
+## 5. Node.js:
+### a. Install:
+https://nodejs.org/en/download
+### b. Using node.js:
+- **Docker command**:
+  
+|Commands                                 | To do                                                |
+| --------------------------------------- | ---------------------------------------------------- |
+|`docker start node, docker exec -it node sh`|run node|
+|`node`|Use node|
+|`docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs Workspaces/databas/:/database" --entrypoint sh node:22-alpine`|Create and mount the container 'node' with a folder|
+|`node <the file name>`|Run the file in node.js|
+|`docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs-Workspaces/databas/:/database" -p 1337:1337 --entrypoint sh node:22-alpine`|Create and mount the container 'node' with a folder and export port 1337|
+
+- **How to kill the port that is running somewhere?**
+
+|Commands                                 | To do                                                |
+| --------------------------------------- | ---------------------------------------------------- |
+|`netstat -tulnp `|` grep 1337`|Find the PIP using port 1337|
+|`tcp        0      0 :::1337                 :::*                    LISTEN      125/node`|The PIP was shown|
+|`kill -9 125`|kill the PIP 125|
+
+==========//==========//==========//==========//==========//==========//==========
+
+## 6. Express:
+### a. Install:
+`npm install express ejs`
+### b. Using express:
+

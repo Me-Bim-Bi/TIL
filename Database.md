@@ -205,15 +205,52 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 
 ==========//==========//==========//==========//==========//==========//==========
 
-## 3. Node.js:
-### a. Install:
-https://nodejs.org/en/download
-### b. Using node.js:
-- **Docker command**:
-  
-|Commands                                 | To do                                                |
-| --------------------------------------- | ---------------------------------------------------- |
-|`docker start node, docker exec -it node sh`|run node|
-|`node`|Use node|
-|`docker run -it --name node -v "/Users/chuhathanh/Workspaces/Thanhs Workspaces/databas/:/database" --entrypoint sh node:22-alpine`|Create and mount the container 'node' with a folder|
-|`node <the file name>`|Run the file in node.js|
+
+
+## 3. Database transaction: allt eller inget
+### a. Storage Engines
+CSV, Archive, Blackhole: these storage engines handle data differently. For example, Blackhole functions like /dev/null—anything inserted into it disappears.
+
+### b. Transactions: 
+- A transaction in SQL is a sequence of operations that depend on each other. If any part of the transaction fails, the entire transaction can be rolled back to maintain consistency. This ensures that the system either applies all changes or none, preventing partial updates that could cause inconsistencies.
+    - START TRANSACTION or BEGIN: Initiates a new transaction.
+    - COMMIT: Finalizes the transaction, making changes permanent.
+    - ROLLBACK: Cancels the transaction, undoing all changes made within it.
+    - SET autocommit: Enables or disables automatic commitment of each individual SQL statement.
+
+### c. ACID Properties
+- ACID is a set of properties ensuring reliable database transactions:
+    - A (Atomicity): A transaction must be all or nothing—it is executed as a single unit. If one part fails, the entire transaction is rolled back.
+    - C (Consistency): The transaction moves the database from one valid state to another, ensuring constraints, cascades, and triggers remain valid.
+    - I (Isolation): Transactions execute independently, meaning one transaction cannot see the partial results of another ongoing transaction.
+    - D (Durability): Once committed, a transaction's changes persist even in the event of a system crash.
+
+### d. Transaction Log
+- A transaction log records all changes before applying them (write-ahead logging). It logs:
+    - The transaction type
+    - Affected database objects
+    - Previous and new values
+    - Undo/redo information
+
+### e. Transaction Access Mode
+- Transaction_characteristic: Defines how the system handles transactions.
+
+### f. Isolation Levels
+- Isolation levels balance performance and data consistency when multiple transactions interact simultaneously:
+    - READ UNCOMMITTED: Transactions can read uncommitted changes made by other transactions (lowest isolation, high risk of dirty reads).
+    - READ COMMITTED: Transactions only see committed changes.
+    - REPEATABLE READ: Ensures consistent reads within a transaction.
+    - SERIALIZABLE: The strictest level—transactions are executed sequentially to ensure complete isolation.
+
+### g. Read Phenomena
+- Dirty Reads: Reading data that has been modified but not committed.
+- Non-Repeatable Reads: A transaction reads the same row twice but gets different results due to another transaction's changes.
+- Phantom Reads: A query returns different results when executed multiple times due to new rows being inserted or deleted by other transactions.
+
+### h. Locking & Deadlocks
+- Locking: Ensures data integrity by preventing multiple transactions from modifying the same data simultaneously.
+- Deadlocks: Occur when transactions wait indefinitely for each other to release locks, preventing further progress. Proper transaction management helps avoid deadlocks.
+
+### i. Transactions in MySQL (npm mysql)
+- Best practices for handling transactions in Node.js with MySQL: Enable multiple queries: `multipleStatements: true`
+- Use helper functions for START TRANSACTION, COMMIT, and ROLLBACK to manage transactions efficiently.
