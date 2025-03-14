@@ -241,7 +241,7 @@ https://nodejs.org/en/download
 
 |Commands                                 | To do                                                |
 | --------------------------------------- | ---------------------------------------------------- |
-|`netstat -tulnp `|` grep 1337`|Find the PIP using port 1337|
+|`netstat -tulnp \| grep 1337`|Find the PIP using port 1337|
 |`tcp        0      0 :::1337                 :::*                    LISTEN      125/node`|The PIP was shown|
 |`kill -9 125`|kill the PIP 125|
 
