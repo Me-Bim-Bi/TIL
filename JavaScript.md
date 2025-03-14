@@ -242,7 +242,7 @@ https://nodejs.org/en/download
 |Commands                                 | To do                                                |
 | --------------------------------------- | ---------------------------------------------------- |
 |`netstat -tulnp `|` grep 1337`|Find the PIP using port 1337|
-|`tcp        0      0 :::1337                 :::*                    LISTEN      125/node`|The PIP was shown|
+tcp        0      0 :::1337                 :::*                    LISTEN      125/node`|The PIP was shown|
 |`kill -9 125`|kill the PIP 125|
 
 ==========//==========//==========//==========//==========//==========//==========
@@ -251,4 +251,80 @@ https://nodejs.org/en/download
 ### a. Install:
 `npm install express ejs`
 ### b. Using express:
+- Example abour file router/index.js: define routers for Express applications.
+```
+/**
+ * General routes.
+ */
+"use strict";
 
+let express = require('express');
+let router  = express.Router();
+
+// Add a route for the path /
+router.get('/', (req, res) => {
+    res.send("Hello World");
+});
+
+// Add a route for the path /about
+router.get("/about", (req, res) => {
+    res.send("About something");
+});
+
+module.exports = router;
+```
+
+- Set upp Express server in file index1.js
+```
+const express = require("express");
+const app = express();
+const routeIndex = require("./route/index.js");
+app.use("/", routeIndex);`
+````
+
+- Log incoming requests to console to see who accesses the server on what route.
+```
+ *
+ * @param {Request}  req  The incoming request.
+ * @param {Response} res  The outgoing response.
+ * @param {Function} next Next to call in chain of middleware.
+ *
+ * @returns {void}
+ */
+function logIncomingToConsole(req, res, next) {
+    console.info(`Got request on ${req.path} (${req.method}).`);
+    next();
+}
+module.exports = {
+    logIncomingToConsole: logIncomingToConsole
+};
+````
+
+- Log app details to console when starting up.
+```
+ * @return {void}
+ */
+function logStartUpDetailsToConsole() {
+    let routes = [];
+
+    // Find what routes are supported
+    app._router.stack.forEach((middleware) => {
+        if (middleware.route) {
+            // Routes registered directly on the app
+            routes.push(middleware.route);
+        } else if (middleware.name === "router") {
+            // Routes added as router middleware
+            middleware.handle.stack.forEach((handler) => {
+                let route;
+
+                route = handler.route;
+                route && routes.push(route);
+            });
+        }
+    });
+
+    console.info(`Server is listening on port ${port}.`);
+    console.info("Available routes are:");
+    console.info(routes);
+}
+```
