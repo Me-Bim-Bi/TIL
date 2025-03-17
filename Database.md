@@ -213,7 +213,7 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 
 
 
-## 3. Database transaction: allt eller inget
+## 3. Database transaction: all or nothing
 ### a. Storage Engines
 CSV, Archive, Blackhole: these storage engines handle data differently. For example, Blackhole functions like /dev/null—anything inserted into it disappears.
 
