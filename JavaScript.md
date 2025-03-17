@@ -282,7 +282,10 @@ const routeIndex = require("./route/index.js");
 app.use("/", routeIndex);`
 ````
 
-- Log incoming requests to console to see who accesses the server on what route.
+- Log incoming requests to console to see who accesses the server on what route:
+    - Track requests to the server: help administrators or developers know which requests are being sent, monitor application activity.
+    - Log for debugging purposes: when errors or abnormalities occur, this log can help identify the origin of the request.
+    - Enhance security: can be extended to log more information (IP address, headers...) to detect suspicious requests.
 ```
  *
  * @param {Request}  req  The incoming request.
@@ -327,4 +330,43 @@ function logStartUpDetailsToConsole() {
     console.info("Available routes are:");
     console.info(routes);
 }
+```
+
+- Tree express: may be useful for the upcoming project. 
+
+```
+.
+├── config                      //to connect to the database
+│   └── db
+│       └── bank.json
+├── index.js                    //run the program from this file
+├── middleware                  //defines a general middleware for Express.js applications. 
+│   └── index.js                //the main function of this middleware is to log request information to the console.
+├── node_modules                //will have after we run `npm install` to use npm packet 
+├── package-lock.json/          //will have after we run `npm install` to use npm packet 
+├── package.json
+├── public                      //log to the me and redovisning-webside
+│   ├── favicon.ico
+│   ├── img
+│   │   └── me.jpg
+│   ├── js
+│   │   └── main.js
+│   ├── me.html
+│   ├── om.html
+│   ├── redovisning.html
+│   └── style
+│       └── style.css
+├── router 
+│   ├── bank.js                //defines routers for Express applications. Need that, dymanic data.
+│   ├── index.js               //defines routers for Express applications. Do not need that. Only show for the lession about static data
+│   └── today.js              // defines a router (/) to display the current date when the user accesses it. Do not need that. Only show for the lession about  static data
+├── src
+│   └── bank.js               // querries the database
+└── views                     // all html files to defines how to everything see in the webside
+    ├── bank
+    │   ├── balance.ejs        
+    │   ├── footer.ejs
+    │   ├── header.ejs
+    │   └── index.ejs
+    └── today.ejs
 ```

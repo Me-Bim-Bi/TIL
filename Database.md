@@ -51,6 +51,12 @@
 |`select user();`|show the user that we used|
 |`mysql -u maria -p`|Connect to the database with the user maria|
 
+- _Should use this way to create an user:_ to be not affected by the ip adress that we use in container or not
+|Commands                                 | To do                                                |
+| ----------------------------------------- | -------------------------------------------------  |
+|`DROP USER IF EXISTS 'maria'@'localhost'; DROP USER IF EXISTS 'maria'@'%';`|Delete user 'maria' if it exists. Should to delete before create a new one|
+|`CREATE USER 'maria'@'%' IDENTIFIED BY 'P@ssw0rd';`|Create user with name and password |
+|`GRANT ALL PRIVILEGES ON *.* TO 'maria'@'%' WITH GRANT OPTION;`|Grant user permissions|
 
 - **Database**:
   
@@ -67,7 +73,7 @@
   - You first need to save all your code in different files.
   - Create a reset file, for example: reset-part-1.sql.
   - Connect to the database via user (if you lose the user, create a new one from root).
-  - Enter the command: source [file name]; . Ten ten. You have your data back. Congrats!
+  - Enter the command: source [file name]; . Ten ten. You have your data back. Congrats!
    
 - **Table**:
   
