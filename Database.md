@@ -211,8 +211,6 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 
 ==========//==========//==========//==========//==========//==========//==========
 
-
-
 ## 3. Database transaction: allt eller inget
 ### a. Storage Engines
 CSV, Archive, Blackhole: these storage engines handle data differently. For example, Blackhole functions like /dev/null—anything inserted into it disappears.
@@ -260,3 +258,120 @@ CSV, Archive, Blackhole: these storage engines handle data differently. For exam
 ### i. Transactions in MySQL (npm mysql)
 - Best practices for handling transactions in Node.js with MySQL: Enable multiple queries: `multipleStatements: true`
 - Use helper functions for START TRANSACTION, COMMIT, and ROLLBACK to manage transactions efficiently.
+
+==========//==========//==========//==========//==========//==========//==========
+
+## 4. Procedur och trigger
+### a. A CRUD-based web client with an HTML form that allows users to create new rows in the database, delete them, edit them, and view them.
+C: create
+R: read
+U: update
+D: delete
+
+### b. Timestamps in the Database: Row Status
+- Implement timestamps when creating the table. 
+```
+DROP TABLE IF EXISTS t1;
+
+CREATE TABLE t1 (
+    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    value CHAR(2),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Records when a row is created
+    updated TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP, -- Records when a row is updated; if not updated, it remains NULL
+    deleted TIMESTAMP DEFAULT NULL -- A soft delete mechanism: does not actually delete the row but marks it as hidden.
+                                   -- Useful for keeping order history until the customer confirms the order or returns an item.
+);
+```
+
+- Soft delete: Instead of permanently deleting a row, it is marked as deleted:
+```
+UPDATE t1 SET deleted = NOW() WHERE id = 3;
+```
+
+- Show rows that have been updated: `SELECT * FROM t1 WHERE updated IS NOT NULL;`
+- Implement a "published" timestamp to control when a row should be considered published.
+    - For example, a row can be scheduled to be published next Saturday => The application logic can compare the current date with the scheduled publish date to determine whether the row should be displayed.
+
+
+### c. Stored Procedure:
+- Programming in the Database: Database programming involves more than just writing SQL queries; it includes various features like APIs, variables, stored procedures, triggers, and functions.
+- Variables in SQL Scripts:
+
+|      Feature       |       Global Variable         |       Advanced Variable (Session/User-Defined)       |
+| ------------------ | ------------------------------| ---------------------------------------------------- |
+| Scope   | Global (system-wide)                    | Limited to session/procedure|
+| Persistence   | Remains after session ends        | Exists only during session/procedure|
+| Usage   | System settings, configurations         | Temporary storage, dynamic queries|
+| Example   | DB	MySQL, SQL Server               | MySQL, PostgreSQL, Oracle (PL/SQL)|
+| Scope   | Global (system-wide)                    | Limited to session/procedure|
+
+- Stored Procedure: a stored procedure is a small program or routine that can be called to execute database code, including SQL statements and common programming constructs such as variables, if-statements, loops, and more.
+
+- Defined as a database object using CREATE, DROP, and ALTER.
+    ```
+    DROP PROCEDURE IF EXIXST small_proc;
+
+    DELIMITER ;;
+
+    CREATE PROCEDURE small_proc()
+    BEGIN
+        SELECT NOW() AS "Current time"; //Compound statements
+    END
+    ;;
+
+    DELIMITER;
+    ```
+- Called using: `CALL small_proc();`
+- Compound Statement Syntax in Stored Programs
+- Stored procedures, triggers, and functions all use compound statements.
+- Begins with BEGIN and ends with END, with programming code, variables, and SQL combined in between.
+- Local variables: Exist within the scope of the compound statement.
+- Avoid naming conflicts between local variables and column/table names (e.g., test_proc, p_balance).
+- Common constructs inside compound statements:
+    - LOOP, REPEAT/UNTIL, WHILE
+    - CASE/WHEN/ELSE
+    - LEAVE/RETURN
+    - CURSOR/OPEN/FETCH/CLOSE
+    - CONDITION/HANDLER/SIGNAL
+- Why Use Stored Procedures?
+    ✅ Handle complex logic within the database.
+    ✅ Abstract database implementation behind an API.
+    ✅ Enable unit testing of database operations.
+    ✅ Ensure the right type of code is written by the right expertise.
+    ✅ Maintain separation of concerns.
+- Disadvantages of Stored Procedures
+    ❌ Database-specific code.
+    ❌ Compatibility issues across different database systems.
+    ❌ Requires a proper development, testing, and debugging environment.
+- Example: Build a procedure to transfer money between two accounts.
+    
+- Triggers are automatic database actions that execute when an INSERT, UPDATE, or DELETE operation occurs.
+    - New row values: NEW.id, NEW.column
+    - Old row values: OLD.id, OLD.column
+        - Example: Create a procedure to transfer money between two accounts and track when changes occur.
+        - Example: Logging Balance Updates with a Trigger
+        ```
+        CREATE TABLE account_log (
+        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        `when` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        `what` VARCHAR(20),
+        `account` CHAR(4),
+        `balance` DECIMAL(10,2),
+        `amount` DECIMAL(10,2)
+        );
+
+        INSERT INTO account_log (what, account, amount)
+        VALUES
+            ('move_money_from', from_account, -amount),
+            ('move_money_to', to_account, +amount);
+
+        DROP TRIGGER IF EXISTS log_balance_update;
+
+        CREATE TRIGGER log_balance_update
+        AFTER UPDATE
+        ON account FOR EACH ROW
+        INSERT INTO account_log (`what`, `account`, `balance`, `amount`)
+        VALUES ('trigger', NEW.id, NEW.balance, NEW.balance - OLD.balance);
+        ```
+    
+
