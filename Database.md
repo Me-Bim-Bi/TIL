@@ -3,10 +3,7 @@
 ## Content:
 1. SQLite:
 2. MariaDB:
-3. Node.js:
-4. JavaScript: Moved to JavaScript.md
-5. JavaScript connect to MySQL: Moved to JavaScript.md
-6. ER modellering: Moved to ER modellering
+3. Database transaction
 
 ===============================================================================
 
@@ -211,7 +208,7 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 
 ==========//==========//==========//==========//==========//==========//==========
 
-## 3. Database transaction: allt eller inget
+## 3. Database transaction: all or nothing
 ### a. Storage Engines
 CSV, Archive, Blackhole: these storage engines handle data differently. For example, Blackhole functions like /dev/null—anything inserted into it disappears.
 
@@ -258,6 +255,7 @@ CSV, Archive, Blackhole: these storage engines handle data differently. For exam
 ### i. Transactions in MySQL (npm mysql)
 - Best practices for handling transactions in Node.js with MySQL: Enable multiple queries: `multipleStatements: true`
 - Use helper functions for START TRANSACTION, COMMIT, and ROLLBACK to manage transactions efficiently.
+<<<<<<< HEAD
 
 ==========//==========//==========//==========//==========//==========//==========
 
@@ -375,3 +373,4 @@ UPDATE t1 SET deleted = NOW() WHERE id = 3;
         ```
     
 
+=======
