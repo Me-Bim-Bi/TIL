@@ -261,7 +261,7 @@ CSV, Archive, Blackhole: these storage engines handle data differently. For exam
 
 ==========//==========//==========//==========//==========//==========//==========
 
-## 4. Procedur och trigger
+## 4. Procedure and trigger
 ### a. A CRUD-based web client with an HTML form that allows users to create new rows in the database, delete them, edit them, and view them.
 C: create
 R: read
