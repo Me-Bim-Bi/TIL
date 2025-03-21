@@ -1,9 +1,11 @@
 # DATABASE
 
 ## Content:
-1. SQLite:
-2. MariaDB:
+1. SQLite
+2. MariaDB
 3. Database transaction
+4. Procedure and trigger 
+5. Function
 
 ===============================================================================
 
@@ -105,6 +107,7 @@
 - **Inside a table**:
     - Can use `AUTO_INCREMENT` to automatically generate a unique value for a column when a new record is inserted into a table.
     - `FOREIGN KEY (kurskod) REFERENCES kurs(kod)`to link kurskor i kurstillfalle table med kod i kurs table. If you want to delete a table, you have to start dropping the one that doesn't have any other table linked to it. In this case, we need to drop kurstillfallet table forst, then kurs table.
+    - `amount NUMERIC(4, 2)` type numeric: invole 4 number with two number after     
 
 **- SQL Query Execution Order**:
 When a SQL query is executed, the clauses are processed in a specific sequence, often different from their written order. The logical execution order is as follows:
@@ -261,10 +264,147 @@ CSV, Archive, Blackhole: these storage engines handle data differently. For exam
 
 ## 4. Procedure and trigger
 ### a. A CRUD-based web client with an HTML form that allows users to create new rows in the database, delete them, edit them, and view them.
-C: create
-R: read
-U: update
-D: delete
+- Install body-parser to extract the data that comes in the posted form `npm install body-parser --save`
+- C: create.
+    - Example about create an acount
+    ```
+    in view/.ejs file: use method post to receive the data that comes in the posted form.
+
+    <form class="label-left" method="post">
+        <fieldset>
+            <legend>Create account</legend>
+
+            <label for="id">Id</label>
+            <input id="id" type="text" name="id">
+
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name">
+
+            <label for="balance">Balance</label>
+            <input id="balance" type="number" name="balance">
+
+            <input type="submit" name="doit" value="Create">
+        </fieldset>
+    </form>
+
+    in router/.js file: use the body-parser to extract the data that comes in the posted form
+    const bodyParser = require("body-parser");
+    const urlencodedParser = bodyParser.urlencoded({ extended: false });
+    router.post("/create", urlencodedParser, async (req, res) => {
+        await bank.createAccount(req.body.id, req.body.name, req.body.balance);
+        res.redirect("/bank/balance");
+    });
+
+    in sql/bank/.sql form: create a procedure to create an account in database
+    --
+    -- Create procedure for insert into account
+    --
+    DROP PROCEDURE IF EXISTS create_account;
+    DELIMITER ;;
+    CREATE PROCEDURE create_account(
+        a_id CHAR(4),
+        a_name VARCHAR(8),
+        a_balance DECIMAL(4, 2)
+    )
+    BEGIN
+        INSERT INTO account VALUES (a_id, a_name, a_balance);
+    END
+    ;;
+    DELIMITER ;
+
+
+    in src/bank.js file: call the procedure to create an account in database        
+    /**
+    * Create a new account.
+    *
+    * @async
+    * @param {string} id      A id of the account.
+    * @param {string} name    The name of the account holder.
+    * @param {string} balance Initial amount in the account.
+    *
+    * @returns {void}
+    */
+    async function createAccount(id, name, balance) {
+        let sql = `CALL create_account(?, ?, ?);`;
+        let res;
+
+        res = await db.query(sql, [id, name, balance]);
+        console.log(res);
+        console.info(`SQL: ${sql} got ${res.length} rows.`);
+    }
+    ```
+- R: read
+    - Example about show the acount when we type the account number on the link, like: bank/account/1111 show information of Adam's account.
+    ```
+    in route/.js file:
+    router.get("/account/:id", async (req, res) => {
+    let id = req.params.id;
+    let data = {
+        title: `Account ${id} ${sitename}`,
+        account: id
+    };
+
+    data.res = await bank.showAccount(id);
+
+    res.render("bank/account-view", data);
+    });
+    
+    in src/bank.js file:
+    **
+    * Show details for an account.
+    *
+    * @async
+    * @param {string} id A id of the account.
+    *
+    * @returns {RowDataPacket} Resultset from the query.
+    */
+    async function showAccount(id) {
+        let sql = `CALL show_account(?);`;
+        let res;
+
+        res = await db.query(sql, [id]);
+        //console.log(res);
+        console.info(`SQL: ${sql} got ${res.length} rows.`);
+
+        return res[0];
+    }
+
+    in view/.js file:
+    <td><a href="/bank/account/<%= row.id %>"><%= row.id %></a></td>
+    ```
+- U: update
+    - Update account: 
+        - Create route, use `req.params.id`, render to the .ejs file `res.render("Bank/account-edit", data);`
+        - Create procedure edit_account in .sql file
+        - Create funtion editAccound in src/.js file to call the procedure edit_account
+        - Create .ejs file, note about `readonly value` to avoid the user can edit this value.
+    
+- D: delete
+- Always use POST when we update the database. If we had use GET for updates, it would have exposed a security risk. Only use get to retrieve data, use post to edit data after retrieving the data.
+```
+router.get("/delete/:id", async (req, res) => {
+    let id = req.params.id;
+    let data = {
+        title: `Delete account ${id} ${sitename}`,
+        account: id
+    };
+
+    data.res = await bank.showAccount(id);
+
+    res.render("bank/account-delete", data);
+});
+
+router.post("/delete", urlencodedParser, async (req, res) => {
+    //console.log(JSON.stringify(req.body, null, 4));
+    await bank.deleteAccount(req.body.id);
+    res.redirect(`/bank/balance`);
+});
+```
+|       Method       |        When to use        |      Example Routes       |
+| --------------------- | ----------------------------------------- | ----------------------------- |
+| `GET`   | Retrieve or display data                                   | `/balance`, `/acount/:id`, `/edit/:id`|
+| `POST`   | Modify, create or delete data                                  | `/create`, `/edit`, `/delete`|
+
 
 ### b. Timestamps in the Database: Row Status
 - Implement timestamps when creating the table. 
@@ -309,21 +449,22 @@ UPDATE t1 SET deleted = NOW() WHERE id = 3;
     ```
     DROP PROCEDURE IF EXIXST small_proc;
 
-    DELIMITER ;;
+    DELIMITER ;; //change delimiter of SQL to ";;" to make a diferent with the normal SQL
 
     CREATE PROCEDURE small_proc()
     BEGIN
         SELECT NOW() AS "Current time"; //Compound statements
     END
-    ;;
+    ;; 
 
-    DELIMITER;
+    DELIMITER; //change delimiter of SQL to ";" 
     ```
-- Called using: `CALL small_proc();`
+- Called using CALL. Example: `CALL small_proc();`
+- Show procedue using: `SHOW PROCEDURE STATUS LIKE '%money';` => show status of all procedures that ends with "money"
+- Show how a procedure was created: `SHOW CREATE PROCEDURE move_money \G;`
 - Compound Statement Syntax in Stored Programs
 - Stored procedures, triggers, and functions all use compound statements.
 - Begins with BEGIN and ends with END, with programming code, variables, and SQL combined in between.
-- Local variables: Exist within the scope of the compound statement.
 - Avoid naming conflicts between local variables and column/table names (e.g., test_proc, p_balance).
 - Common constructs inside compound statements:
     - LOOP, REPEAT/UNTIL, WHILE
@@ -332,37 +473,225 @@ UPDATE t1 SET deleted = NOW() WHERE id = 3;
     - CURSOR/OPEN/FETCH/CLOSE
     - CONDITION/HANDLER/SIGNAL
 - Why Use Stored Procedures?
-    ✅ Handle complex logic within the database.
-    ✅ Abstract database implementation behind an API.
-    ✅ Enable unit testing of database operations.
-    ✅ Ensure the right type of code is written by the right expertise.
-    ✅ Maintain separation of concerns.
+    - ✅ Handle complex logic within the database.
+    - ✅ Abstract database implementation behind an API.
+    - ✅ Enable unit testing of database operations.
+    - ✅ Ensure the right type of code is written by the right expertise.
+    - ✅ Maintain separation of concerns.
 - Disadvantages of Stored Procedures
-    ❌ Database-specific code.
-    ❌ Compatibility issues across different database systems.
-    ❌ Requires a proper development, testing, and debugging environment.
+    - ❌ Database-specific code.
+    - ❌ Compatibility issues across different database systems.
+    - ❌ Requires a proper development, testing, and debugging environment.
 - Example: Build a procedure to transfer money between two accounts.
+
+```
+DROP PROCEDURE IF EXISTS move_money;
+
+DELIMITER ;;
+
+CREATE PROCEDURE move_money(
+    from_account CHAR(4),
+    to_account CHAR(4),
+    amount NUMERIC(4, 2)
+)
+
+BEGIN
+
+    DECLARE current_balance NUMERIC(4, 2);
+
+    START TRANSACTION;
+
+    -- Get the current balance of the sender
+    SELECT balance INTO current_balance FROM account WHERE id = from_account;
+
+    IF current_balance - amount < 0 THEN
+        ROLLBACK;
+        SELECT 'Amount on the account is not enough to make transaction.' AS message;
+    ELSE
+        UPDATE account
+            SET
+                balance = balance + amount
+            WHERE
+                id = to_account;
+
+        UPDATE account
+            SET
+                balance = balance - amount
+            WHERE
+                id = from_account;
+
+        COMMIT;
+    END IF;
+
+    SELECT * FROM account;
+END
+;;
+
+DELIMITER ;
+```
+- Note that if we do not use `IN`, MySQL will implicitly treat parameters as `IN` by default.
+
+```
+CREATE PROCEDURE move_money(
+    IN from_account CHAR(4),
+    IN to_account CHAR(4),
+    IN amount DECIMAL(9,2)
+)
+```
+
+|Parameter Type                     | Description                                  |
+| --------------------------------- | -------------------------------------------- |
+| `IN` | (Default) Input-only parameter. The procedure gets a copy of the value and cannot modify it. |
+| `OUT` | Output parameter. The procedure can modify it and return a value. |
+| `INOUT` | Input-Output parameter. The procedure can read and modify the value. |
+
+- It can be better with LEAVE:
+```
+DROP PROCEDURE IF EXISTS move_money;
+
+DELIMITER ;;
+
+CREATE PROCEDURE move_money(
+    IN from_account CHAR(4),
+    IN to_account CHAR(4),
+    IN amount DECIMAL(9,2)
+)
+BEGIN
+    DECLARE current_balance DECIMAL(9,2);
+    DECLARE exit_handler CONDITION FOR SQLEXCEPTION ROLLBACK;
     
+    -- Label för att kunna använda LEAVE
+    DECLARE exit_point BEGIN
+
+    START TRANSACTION;
+
+    -- Hämta nuvarande saldo
+    SELECT balance INTO current_balance FROM account WHERE id = from_account;
+
+    -- Kontrollera om saldot är tillräckligt, annars avbryt direkt
+    IF current_balance < amount THEN
+        ROLLBACK;
+        SELECT 'Insufficient funds for the transaction.' AS message;
+        LEAVE exit_point;
+    END IF;
+
+    -- Utför transaktionen
+    UPDATE account
+    SET balance = balance - amount
+    WHERE id = from_account;
+
+    UPDATE account
+    SET balance = balance + amount
+    WHERE id = to_account;
+
+    COMMIT;
+
+    END exit_point;  -- Avslutar blocket
+
+    -- Visa uppdaterade konton
+    SELECT * FROM account;
+END
+;;
+
+DELIMITER ;
+
+```
+- Example of using mix procedure and .js file:
+    - Create procedure show_balance in the database
+    - Make route to link with the function in .js file that will querry the sql = CALL show_balance
+
+### d. Triggers:
 - Triggers are automatic database actions that execute when an INSERT, UPDATE, or DELETE operation occurs.
     - New row values: NEW.id, NEW.column
     - Old row values: OLD.id, OLD.column
         - Example: Create a procedure to transfer money between two accounts and track when changes occur.
         - Example: Logging Balance Updates with a Trigger
+
         ```
-        CREATE TABLE account_log (
-        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        --
+        -- Example
+        -- 
+        DROP TABLE IF EXISTS account;
+        CREATE TABLE account
+        (
+        `id` CHAR(4) PRIMARY KEY,
+        `name` VARCHAR(8),
+        `balance` DECIMAL(4, 2)
+        );
+
+        DELETE FROM account;
+        INSERT INTO account
+        VALUES
+        ('1111', 'Adam', 10.0),
+        ('2222', 'Eva', 7.0)
+        ;
+
+        --
+        -- Procedure move_money()
+        --
+        DROP PROCEDURE IF EXISTS move_money;
+
+        DELIMITER ;;
+
+        CREATE PROCEDURE move_money(
+        from_account CHAR(4),
+        to_account CHAR(4),
+        amount NUMERIC(4, 2)
+        )
+        MAIN:BEGIN
+        DECLARE current_balance NUMERIC(4, 2);
+
+        START TRANSACTION;
+
+        SELECT balance INTO current_balance FROM account WHERE id = from_account;
+        SELECT current_balance;
+
+        IF current_balance - amount < 0 THEN
+        ROLLBACK;
+        SELECT 'Amount on the account is not enough to make transaction.' AS message;
+        LEAVE MAIN;
+        END IF;
+
+        UPDATE account 
+        SET
+            balance = balance + amount
+        WHERE
+            id = to_account;
+
+        UPDATE account 
+        SET
+            balance = balance - amount
+        WHERE
+            id = from_account;
+
+        COMMIT;
+        SELECT * FROM account;
+        END
+        ;;
+
+        DELIMITER ;
+
+        CALL move_money('1111', '2222', 1.5);
+
+        --
+        -- Log table
+        --
+        DROP TABLE IF EXISTS account_log;
+        CREATE TABLE account_log
+        (
+        `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
         `when` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         `what` VARCHAR(20),
         `account` CHAR(4),
-        `balance` DECIMAL(10,2),
-        `amount` DECIMAL(10,2)
+        `balance` DECIMAL(4, 2),                            -- max value is 99.99
+        `amount` DECIMAL(4, 2)                              -- max value is 99.99
         );
 
-        INSERT INTO account_log (what, account, amount)
-        VALUES
-            ('move_money_from', from_account, -amount),
-            ('move_money_to', to_account, +amount);
+        SELECT * FROM account_log;
 
+        --
+        -- logga med triggers
+        --
         DROP TRIGGER IF EXISTS log_balance_update;
 
         CREATE TRIGGER log_balance_update
@@ -370,7 +699,120 @@ UPDATE t1 SET deleted = NOW() WHERE id = 3;
         ON account FOR EACH ROW
         INSERT INTO account_log (`what`, `account`, `balance`, `amount`)
         VALUES ('trigger', NEW.id, NEW.balance, NEW.balance - OLD.balance);
-        ```
-    
 
-=======
+        CALL move_money('1111', '2222', 1.5);
+
+        SELECT * FROM account_log;
+        ```
+
+    - Example about using Trigger to avoid user update the data in table account. User can insert, delete but not update. The system will show the error message if the user do this.
+    ```
+    --
+    -- Trigger with compound statement and user defined errors
+    --
+    DROP TRIGGER IF EXISTS trigger_test2;
+
+    DELIMITER ;;
+
+    CREATE TRIGGER trigger_test2
+    BEFORE UPDATE
+    ON account FOR EACH ROW
+    BEGIN
+        SIGNAL SQLSTATE '45000' SET message_text = 'My Error Message'; --SQLSTATE '45000' is a general error code in MySQL that is reserved for user-defined errors 
+    END
+    ;;
+    
+    DELIMITER ;
+    ```
+- Use Cases of Triggers:
+    - Enforcing business rules (e.g., ensuring data integrity)
+    - Logging and auditing (e.g., tracking data changes)
+    - Automating complex processes (e.g., sending notifications)
+
+- Commands:
+|Commands                                 | To do                                                |
+| --------------------------------------- | ---------------------------------------------------- |
+| `SHOW TRIGGERS;` | Show all triggers in database |
+| `SHOW TRIGGERS LIKE 'account' \G;` | Show all triggers in database that link to the 'account' table in the vertical format|
+| `SHOW TRIGGERS FROM dbwebb \G;` | List all triggers in the dbwebb database and displays their details in a vertical format|
+| `DROP TRIGGER IF EXISTS trigger_test1;` | Drop a trigger named trigger_test1 |
+| `SHOW CREATE TRIGGER <trigger_name>` | Show how did we creat this trigger |
+| `SHOW CREATE TRIGGER <trigger_name> \G` | Show how did we creat this trigger in the vertical format |
+
+- Note:
+    - When you DROP a table, the triggers associated with the table disappear. 
+    - In an INSERT trigger, the value of NEW, for an AUTO_INCREMENT, is set to 0 and not the value that the key gets when the row is inserted into the table.
+    - If a BEFORE trigger fails, the intended operation is not performed.
+    - AN AFTER trigger is only executed after all BEFORE triggers have been executed and after the rows have been processed with INSERT, UPDATE or DELETE.
+
+5. Function:
+- UDF: Skriv i C++ sedan länkar till databasservern
+- 
+- funktion som stored routine: 
+- Example 1:
+```
+--
+-- Function for grading an exam A-F, FX.
+--
+DROP FUNCTION IF EXISTS grade;
+DELIMITER ;;
+
+CREATE FUNCTION grade(
+score INTEGER
+)
+RETURNS CHAR(2)
+DETERMINISTIC                   -- alltid returnerar samma svar när en mängd parametrar skickas in
+BEGIN
+IF score >= 90 THEN
+    RETURN 'A';
+ELSEIF score >= 80 THEN
+    RETURN 'B';
+ELSEIF score >= 70 THEN
+    RETURN 'C';
+ELSEIF score >= 60 THEN
+    RETURN 'D';
+ELSEIF score >= 55 THEN
+    RETURN 'E';
+ELSEIF score >= 50 THEN
+    RETURN 'FX';
+END IF;
+RETURN 'F';
+END
+;;
+
+DELIMITER ;
+
+
+SELECT 
+    *,
+    grade(score) AS 'grade'
+FROM exam
+ORDER BY grade;
+
+```
+
+- Example 2:
+```
+DROP FUNCTION IF EXISTS time_of_the_day;
+DELIMITER ;;           
+
+CREATE FUNCTION time_of_the_day()
+RETURNS DATETIME
+NOT DETERMINISTIC NO SQL            -- returnerar inte samma svar när en mängd parametrar skickas in. I den här fallet, returnerar nuvarande tid
+BEGIN
+    RETURN NOW();
+END
+;;
+
+DELIMITER ;
+```
+
+- Commands:
+|Commands                                 | To do                                                |
+| --------------------------------------- | ---------------------------------------------------- |
+| `SHOW FUNCTION STATUS;` | Show all function's status |
+| `SHOW FUNCTION STATUS LIKE 'account' \G;` | Show all function with name 'account' in the vertical format|
+| `SHOW FUNCTION STATUS WHERE Db = 'dbwebb' \G;` | List all function in the dbwebb database and displays their details in a vertical format|
+| `DROP FUNCTION IF EXISTS score;` | Drop a function named score |
+| `SHOW CREATE FUNCTION <function_name>` | Show how did we creat this function |
+| `SHOW CREATE FUNCTION <function_name> \G` | Show how did we creat this function in the vertical format |

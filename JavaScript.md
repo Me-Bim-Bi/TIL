@@ -1,4 +1,14 @@
 # JAVASCRIPT
+## Content:
+1. Dealing with events:
+2. JavaScript syntax:
+3. JavaScript connect to MySQL:
+4. Examples about javascript and javascript connect to MySQL
+5. Node.js:
+6. Express:
+
+==========//==========//==========//==========//==========//==========//==========
+
 ## 1. Dealing with events:
 - JavaScript runs on a single thread and uses the event loop to handle asynchronous operations. The program executes synchronous lines of code first, while asynchronous operations (such as reading files, calling APIs) are processed after the Stack is empty. Since the program does not wait for asynchronous operations to complete, if the appropriate mechanism is not used, the results may not be processed properly.
 - Therefore, people use callbacks to get the results of code that requires longer processing time than other lines of code. However, this leads to problems when there are too many callbacks nested within each other and leads to callback hell, which is difficult to read, difficult to understand, difficult to maintain, and prone to errors.
@@ -251,6 +261,7 @@ https://nodejs.org/en/download
 ### a. Install:
 `npm install express ejs`
 ### b. Using express:
+- Command in .ejs file using `#`
 - Example abour file router/index.js: define routers for Express applications.
 ```
 /**

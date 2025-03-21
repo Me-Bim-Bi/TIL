@@ -50,4 +50,10 @@ Indicate weak entities by underlining the apartment number and using **dashed li
     - No complex relationships.
 - Define primary and foreign keys, data type: Adjust the diagram by introducing primary keys (PK) and foreign keys (FK) along with additional attributes.
 
-
+## 4. Physical model
+- Create SQL DDL for Tables
+    - Save the SQL code in a ddl.sql file. It is also recommended to create:
+    - setup.sql – To store the commands used to create the database.
+    - reset.sql – To reset the database to a specific version when needed.
+    - Backup file – To maintain a copy of the database for recovery purposes.
+- List Functions the Database Should Support (API): list All the Functions You Plan to Implement
