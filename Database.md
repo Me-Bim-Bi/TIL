@@ -208,6 +208,10 @@ UNION //Show akronym, avdelning from table larare that have apartment named "DID
 |`mysqldump -u maria -p skolan`|create a back-up of the database named skolan|
 |`mysqldump -u maria -p --result-file=skolan.sql skolan`|save the back-up commands to the file named skolan.sql|
 |`use skolan1`, `source skolan.sql`|back-up everything to the database named skolan1|
+|`mysqldump -u maria -p --routines --result-file=eshop.sql eshop`|back-up with procedures and functions|
+
+
+
 
 ==========//==========//==========//==========//==========//==========//==========
 

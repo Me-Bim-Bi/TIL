@@ -167,6 +167,8 @@
 - https://npmjs.com/package/promise-mysql
 - https://www.npmjs.com/package/cli-table3 : to have a nice table
 - https://www.npmjs.com/package/console.table : to have a nice table
+- https://www.npmjs.com/package/moment: to have a nice table with time
+
   
 ### b. Using:
 |     Commands     |     Description     |
@@ -174,6 +176,8 @@
 |     `npm init`     | Create a `package.json` file |
 |     `npm install mysql promise-mysql`     |install two packages via npm: mysql (This is the official MySQL client library for Node.js, allowing you to connect to and interact with a MySQL database.) and promise-mysql (This is a wrapper around the mysql package that provides a Promise-based API, making it easier to work with asynchronous operations using async/await.)|
 |     `npm install console.table --save`     | Install console.table module |
+|     `npm install moment`     | Install console.moment module |
+
 
 ==========//==========//==========//==========//==========//==========//==========
 
