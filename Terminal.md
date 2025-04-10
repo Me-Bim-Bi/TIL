@@ -51,5 +51,6 @@ You can open folders, files and even URLs
 | mv [dirname] [dirname]      | Move directory                                      |
 | mv [filename] [filename]    | Rename file or folder                               |
 | mv [filename] [filename] -v | Rename Verbose - print source/destination directory |
+| `cp -R /Users/chuhathanh/Workspaces/Thanhs-Workspaces/databas/me/kmom05/eshop1 /Users/chuhathanh/Workspaces/Thanhs-Workspaces/databas/me/test`|Copy folder|
 
 We can also do multiple commands at once with the `&&` operator:

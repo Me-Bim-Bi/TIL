@@ -6,7 +6,7 @@
 3. Database transaction
 4. Procedure and trigger 
 5. Function
-
+6. Index
 ===============================================================================
 
 ## 1. SQLite:
@@ -119,6 +119,106 @@ HAVING: Filters the groups created by GROUP BY based on aggregated values.
 SELECT: Specifies the output columns.
 ORDER BY: Sorts the final result.
 ```
+
+    - CONCAT and GROUP CONCAT:
+    `SELECT CONCAT('Hello', ' ', 'World');``=> `Hello World``
+    `SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM employees;``=> `John, Alice, Bob, Charlie`
+
+1. CONCAT():
+The CONCAT() function in SQL combines multiple strings into a single string. It does not handle multiple rows, just combines values from a single row.
+
+Example:
+Suppose we have a table like this:
+
+id	name	category
+1	Item A	Category 1
+2	Item B	Category 1
+3	Item C	Category 2
+sql
+Copy
+Edit
+SELECT CONCAT(name, ' - ', category) AS result
+FROM items;
+Result:
+result
+Item A - Category 1
+Item B - Category 1
+Item C - Category 2
+Here, CONCAT() simply combines the name and category columns for each row into a new string.
+
+2. GROUP_CONCAT():
+The GROUP_CONCAT() function is used to concatenate values from multiple rows into a single string, with an optional separator. It is generally used with GROUP BY to combine values within a group.
+
+Example:
+Now, suppose we want to concatenate the name values for all items in Category 1:
+
+sql
+Copy
+Edit
+SELECT category, GROUP_CONCAT(name ORDER BY name ASC) AS concatenated_names
+FROM items
+GROUP BY category;
+Result:
+category	concatenated_names
+Category 1	Item A, Item B
+Category 2	Item C
+GROUP_CONCAT() concatenates the name values for each category into one string.
+
+The result for Category 1 is Item A, Item B because these two items belong to that category.
+
+3. GROUP_CONCAT(DISTINCT CONCAT(...)):
+The combination of GROUP_CONCAT() with DISTINCT inside a CONCAT() function allows you to concatenate unique values. In other words, if there are duplicate values in the rows, DISTINCT ensures that only unique values are included in the concatenated result.
+
+Example:
+Let’s consider we have a table with duplicates:
+
+id	name	category
+1	Item A	Category 1
+2	Item B	Category 1
+3	Item A	Category 1
+4	Item C	Category 2
+Now, let’s use GROUP_CONCAT(DISTINCT CONCAT(...)):
+
+sql
+Copy
+Edit
+SELECT category, GROUP_CONCAT(DISTINCT CONCAT(name, ' (', id, ')') ORDER BY name ASC) AS unique_names
+FROM items
+GROUP BY category;
+Result:
+category	unique_names
+Category 1	Item A (1), Item B (2)
+Category 2	Item C (4)
+DISTINCT ensures that only unique name values are included in the result.
+
+For Category 1, even though Item A appears twice, it is only included once in the result, giving Item A (1) and Item B (2).
+
+How Each Works:
+CONCAT():
+
+Works for combining strings from a single row.
+
+Example: "Item A - Category 1".
+
+GROUP_CONCAT():
+
+Combines values from multiple rows into a single string.
+
+Example: "Item A, Item B" for multiple items in the same group.
+
+GROUP_CONCAT(DISTINCT CONCAT(...)):
+
+Combines values from multiple rows while ensuring uniqueness of the concatenated values.
+
+Example: "Item A (1), Item B (2)" for unique items in a group.
+
+Use Cases:
+CONCAT(): When you want to combine multiple columns into a single column for one row.
+
+GROUP_CONCAT(): When you want to list values from multiple rows into a single string (e.g., all items in a category).
+
+GROUP_CONCAT(DISTINCT CONCAT(...)): When you want to list only unique values from multiple rows, and you're concatenating multiple pieces of information into a string.
+
 - **Join the tables**:
 ```
 SELECT
@@ -132,6 +232,13 @@ FROM v_larare_alsta AS                  //Use the 'v_larare_alsta' table and ali
         ON k.kod = kt.kurskod
 ORDER BY alder DESC, k.namn ASC
 ;
+
+JOIN Type	Kết quả
+INNER JOIN	Chỉ lấy dữ liệu có kết quả khớp ở cả hai bảng.
+LEFT JOIN	Lấy toàn bộ dữ liệu từ bảng trái, nếu không có khớp, bảng phải là NULL.
+RIGHT JOIN	Lấy toàn bộ dữ liệu từ bảng phải, nếu không có khớp, bảng trái là NULL.
+FULL OUTER JOIN	Lấy tất cả dữ liệu từ cả hai bảng, nếu không có khớp, giá trị sẽ là NULL.
+
 ```
 - The different between JOIN, OUTER JOIN, LEFT/RIGHT OUTER JOIN
   
@@ -262,7 +369,6 @@ CSV, Archive, Blackhole: these storage engines handle data differently. For exam
 ### i. Transactions in MySQL (npm mysql)
 - Best practices for handling transactions in Node.js with MySQL: Enable multiple queries: `multipleStatements: true`
 - Use helper functions for START TRANSACTION, COMMIT, and ROLLBACK to manage transactions efficiently.
-<<<<<<< HEAD
 
 ==========//==========//==========//==========//==========//==========//==========
 
@@ -749,10 +855,11 @@ DELIMITER ;
     - If a BEFORE trigger fails, the intended operation is not performed.
     - AN AFTER trigger is only executed after all BEFORE triggers have been executed and after the rows have been processed with INSERT, UPDATE or DELETE.
 
-5. Function:
-- UDF: Skriv i C++ sedan länkar till databasservern
-- 
-- funktion som stored routine: 
+==========//==========//==========//==========//==========//==========//==========
+
+## 5. Function:
+- UDF: Write in C++ and then link to the database server.
+- Function as a stored routine:
 - Example 1:
 ```
 --
@@ -765,7 +872,7 @@ CREATE FUNCTION grade(
 score INTEGER
 )
 RETURNS CHAR(2)
-DETERMINISTIC                   -- alltid returnerar samma svar när en mängd parametrar skickas in
+DETERMINISTIC                   -- Always returns the same result when a set of parameters is passed in
 BEGIN
 IF score >= 90 THEN
     RETURN 'A';
@@ -794,6 +901,7 @@ FROM exam
 ORDER BY grade;
 
 ```
+- Important: Function characteristics: You need to specify a characteristic for them. This is done by stating whether they are `DETERMINISTIC` or `NOT DETERMINISTIC`; `CONTAINSSQL` or `NO SQL` or `READ SQL DATA` or `MODIFIES SQL DATA`
 
 - Example 2:
 ```
@@ -802,7 +910,7 @@ DELIMITER ;;
 
 CREATE FUNCTION time_of_the_day()
 RETURNS DATETIME
-NOT DETERMINISTIC NO SQL            -- returnerar inte samma svar när en mängd parametrar skickas in. I den här fallet, returnerar nuvarande tid
+NOT DETERMINISTIC NO SQL            -- Does not return the same result when a set of parameters is passed in. In this case, it returns the current time
 BEGIN
     RETURN NOW();
 END
@@ -820,3 +928,21 @@ DELIMITER ;
 | `DROP FUNCTION IF EXISTS score;` | Drop a function named score |
 | `SHOW CREATE FUNCTION <function_name>` | Show how did we creat this function |
 | `SHOW CREATE FUNCTION <function_name> \G` | Show how did we creat this function in the vertical format |
+
+==========//==========//==========//==========//==========//==========//==========
+
+## 6. Index
+- It's very usefull to speed up data retrieval.
+- When to use an Index:
+    - With searching, filtering, or joining on a column.
+    - When we sort or group by a column.
+    - Foreign keys: Often need indexes for performance on joins.
+    - For performance optimization on large tables.
+- Commands:
+|Commands                                 | To do                                                |
+| --------------------------------------- | ---------------------------------------------------- |
+| `CREATE INDEX index_points ON course(points)` | Create index with numberic value |
+| `SHOW INDEX FROM course;` | Show all index on table course|
+| `DROP INDEX full_name ON course;` | Drop index full_name on table course|
+| `DROP INDEX full_name ON course;` | Drop index full_name on table course|
+

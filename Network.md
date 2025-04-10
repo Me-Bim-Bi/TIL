@@ -1,0 +1,4 @@
+- Client-server paradigm: Alla datorn pratar inte med varandra utan att prata med serven iställelt. Ex: HTTP, FTP, ...
+- Peer-peer architecture: no always-on server. Exampel: P2P file sharing 
+- Process communicating
+- Sockets: 

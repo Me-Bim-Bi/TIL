@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/x64/ninja -G Ninja -S "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/Förelässning2 - modul 3" -B "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/Förelässning2 - modul 3/cmake-build-debug"
+/Applications/CLion.app/Contents/bin/cmake/mac/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/x64/ninja -G Ninja -S "/Users/chuhathanh/Workspaces/Thanhs-Workspaces/TIL/C++/Förelässning2 - modul 3" -B "/Users/chuhathanh/Workspaces/Thanhs-Workspaces/TIL/C++/Förelässning2 - modul 3/cmake-build-debug"
 -- The C compiler identification is AppleClang 14.0.0.14000029
 -- The CXX compiler identification is AppleClang 14.0.0.14000029
 -- Detecting C compiler ABI info
@@ -13,4 +13,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done (1.7s)
 -- Generating done (0.0s)
--- Build files have been written to: /Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/Förelässning2 - modul 3/cmake-build-debug
+-- Build files have been written to: /Users/chuhathanh/Workspaces/Thanhs-Workspaces/TIL/C++/Förelässning2 - modul 3/cmake-build-debug
