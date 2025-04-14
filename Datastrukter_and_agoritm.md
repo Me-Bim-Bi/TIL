@@ -74,12 +74,12 @@ Sida
 av 3
 ZOOM
 Sökning, tidskomplexitet insertionsort och selectionssort
-1. Vilken tidskomplexitet har linjärsökning i värsta/sämsta fallet? 
+1. Vilken tidskomplexitet har linjärsökning i värsta/sämsta fallet? => O(n)
 - I bästa fall hittar man elementet direkt (första platsen) → O(1)
 - I genomsnitt måste man gå igenom hälften av elementen → O(n)
 - I värsta fallet finns inte elementet i listan, eller ligger sist → O(n)
 
-2. Vilken tidskomplexitet har binärsökning i värsta/sämsta fallet?
+2. Vilken tidskomplexitet har binärsökning i värsta/sämsta fallet? => =(log2n)
 - Bästa fall: Elementet finns mitt i → O(1)
 - Värsta fall: Elementet finns inte eller är i ytterkant → O(log n)
 
@@ -90,26 +90,28 @@ Sökning, tidskomplexitet insertionsort och selectionssort
 5. Anta en sorterad array med 350 element (indexerad fr.o.m 0) och att det element som söks finns
 i den tredje fjärdedelen av arrayen. Vilka index motsvarande startindex, slutindex samt mittindex
 kommer binärsökning att generera för den delsekvens som motsvarar den aktuella fjärdedelen? 
-- Step 1: 0
+- Step 1: 0, 349, 174
+- Step 2: 0, 223, 112 (175, 349, 262) 
+- Step 3: 0, 87, 43 (175, 262, 218) 
 
 6. Om tidskomplexiteten för en algoritm är T(n) kvadratisk, dvs cn2
 , och det vid exekvering med
-1000 element tog 2 mikrosekunder. Vilket är då värdet på ’c’?
-7. Anta att det tar 3 ms att exekvera linjärsökning i värsta fallet i en array innehållande 3000
+1000 element tog 2 mikrosekunder. Vilket är då värdet på ’c’? 2/1000^2 = 2 * 10^-6
+7. Anta att det tar 3 ms att exekvera linjärsökning i värsta fallet i en array innehållande 3000 
 element.
 a. Hur lång tid förväntas det då ta om antalet ökas till 12000?
 i. ca 4 ms
 ii. ca 6 ms
-iii. ca 12 ms
-b. Om det vid en annan exekvering tog 9 ms, hur många element innehöll i så fall arrayen?
+iii. ca 12 ms => sant
+b. Om det vid en annan exekvering tog 9 ms, hur många element innehöll i så fall arrayen? => 9000
 8. Anta att det tar 3 ms att exekvera binärsökning för värsta fallet i en array innehållande 3000
 element.
-a. Om det vid en annan exekvering tog 9 ms, hur många element innehöll i så fall arrayen?
-b. För vilket antal element, dvs värde på n, kommer det att ta 1 ms?
+a. Om det vid en annan exekvering tog 9 ms, hur många element innehöll i så fall arrayen? => 3000^3
+b. För vilket antal element, dvs värde på n, kommer det att ta 1 ms? => 3000^1/3 = 14
 9. Uttryck n3
 /5+21n2
--14n+3 i Θ-notation
-10. Är 2 n+1 = O(2n )? Är 2 2n = O(2 n )?
+-14n+3 i Θ-notation => n^3 => växte snabbaste
+10. Är 2 n+1 = O(2n  => ja )? Är 2 2n = O(2 n )? => nej, 2^2n är mycket snabbare än O(2^n)
 11. Visa att f(n) = 12n3 + 4n2 – 12 = O(n3
 )
 12. Analysera och bestäm tidkomplexiteten O(f(n)) för pseudokod-avsnitten nedan
@@ -137,21 +139,21 @@ for i=0 to n
 result = result + i
 else
 result = number*number
-13. Vilken tidskomplexitet har Selectionsort i värsta fallet?
+13. Vilken tidskomplexitet har Selectionsort i värsta fallet? => O(n^2)
 14. Visa hur innehållet i arrayen nedan sorteras med insertionsort resp selectionsort
 a)
 b)
 15. Anta funktionen f(n) =7n3 – 5n2 + 20n. Nedan följer några påståenden avseende hur funktionen
 växer beroende på n.
 a. f(n) = O(n4
-)
+) Korrekt
 b. f(n) = O(n2
 )
 c. f(n) = Ω(n2
-)
-d. f(n) = Ω(n)
+) Korrekt
+d. f(n) = Ω(n) Korrekt
 e. f(n) = Θ(n3
-)
+) Korrekt
 f. f(n) = Θ(n)
 Vilket/vilka av dessa är korrekt/korrekta?
 16. Vi exekvering av en algoritm uppmättes följande resultat. Vilket tidskomplexitet har algoritmen?
@@ -238,3 +240,114 @@ Visa hur följden 73  48  19  26  88  39  12  53  19  4  66  83  92  28 sorteras
 Tidskomplexitet: n.log(n) för att bygga trädet
 Stabil? Inplace?: 
 d-heap: mer än 2 barn på trädet. dn+1 dn+2 => barn. (4-1)/d => räkna föräldra
+
+==========================
+# Vecka 3
+## Seminarium A3
+Omfattar primärt Countingsort, Radixsort samt tillbakablick/repetition Heapsort och eventuellt viss repetition av innehållet i Del A.
+
+### 1. Countingsort
+Princip (olika bearbetningssteg): A är den listan/arrayen som behöver sortera. Skapa 2 listor/array C och D. Max[A] = k. C[0->k+q]. C[A[i]] = C[A[j]+1]. B[C[A[j]]] = A[j]
+Vi gör något exempel
+Tidskomplexitet O(k+n). 
+Stabil? Ja. In-place? Nej, för att det krävs extra minne.
+
+### 2. Bucketsort: 
+O(n) i sitt medel/förväntade fall. Delar upp datan i "hinkar" sedan använder elementen som nycklar/index. 
+Stabil om den inre sorteringsalgoritmen är stabil. 
+Inte in-place, extra minne baseras på k.
+Värstafalls O(n^2)
+
+### 3. Radixsort
+Princip och ”krav” på nycklarna som ska sorteras: datan är heltal. Sorterar varje siffa för sig: hundra tal, tio tal, en tal... Går från minst signifikanta siffran till den mest signifikanta siffran. Oftast används buckets eller countingsort som subrutin. 
+Hur kan countingsort utnyttjas? sorterar varje siffa för sig
+Vi gör något exempel
+Tidskomplexitet: O(d(n+k))
+Stabil? Ja. In-place? Nej.
+Bättra val än CountingSort om värdena skalar kvadratiskt gentemot antalet element.
+
+### 4. Heapsort
+Repeterar kort
+Vi gör eventuellt något exempel
+Radixsort vs Heapsort
+
+### 5. Vilken/Vilka är stabila? 
+Insertionsort, mergesort, bucketsort, counting sort, radixsort.
+Om n=500 och nycklarna är heltal inom [0..9999] vilken av algoritmerna är då teoretiskt ”snabbast”?
+
+6 element eller mindre => insertionsort är snabbare än dem andra.
+Hybridsorteringen väljer Mergesort när elementer mer än 6. När kommer elementer mindre än 6 => kör man insertionsort. Sedan samlar man med Merge.
+
+===============
+## Seminarium A3: Tillägg (repetition Del A)
+1. Bestäm Θ-notationer för funktionerna
+g(n) = 34.5n2 + 16nlogn + 12 => n2
+h(n) = 53.7 => 1
+f(n) = 4.5 + 8.7logn => log n
+
+2. Visa att g(n) = 2n2 + 4n + 10 = Θ(n2) 
+n >= 4: 4n <= n^2
+        10 < n^2 
+        2n^2 + 4n + 10 < 4n^2
+
+2n^2 + 4n + 10 >= 1*n^2 
+=> g(n) = 2n2 + 4n + 10 = Θ(n2) 
+
+3. Vid exekvering (värsta fallet) av en algoritm med T(n) =  Ο(n3) tog det 0.5 ms när n=2000. Hur lång tid kommer det då att ta om n ökas till 4000? => 4ms
+
+4. Vid exekvering (värsta fallet) av en algoritm med T(n) =  Ο(log2n) tog det 1 mikrosekund när n=100. Vid en annan exekvering (värsta fallet) av samma algoritm tog det 4 mikrosekunder. Hur var n vid detta tillfälle? => 100^4
+
+5. Anta sekvensen 10 15 22 28 34 45 50 58 60 73 79 85 93 och sökning av elementet 66 utförs enligt algoritmen för binärsökning. Hur många kontrollen/jämförelser görs mot elementet i sekvensen under denna sökning och vilka element kommer att jämföras med 66? 
+steg 1: 50 => höger
+steg 2: 73 => vänster
+steg 3: 58 => höger
+steg 4: 60 => inte finns 66.
+=> 4 jämföras och det är 60 som jämföras med 66.
+
+6. Skriv pseudokod för rekursiv binärsökning
+
+7. Vilket är värsta fallet för linjärsökning och vilken tidskomplexitet gäller för detta fall? O(n) när den som vi söker ligger i sista plats
+
+8. Visa hur sekvensen 60  20  30  90 10  70 bearbetas om sortering utförs enligt algoritmen 
+insertionsort: 
+60  20  30  90  10  70
+20  60  30  90  10  70
+20  30  60  90  10  70
+20  30  60  90  10  70
+10  20  30  60  90  70
+10  20  30  60  70  90
+selectionsort: 
+10  20  30  90  60  70
+10  20  30  90  60  70
+10  20  30  90  60  70
+10  20  30  60  90  70
+10  20  30  60  70  90
+
+9. Visa hur sekvensen 60  20  30  90 10  70 40 bearbetas om sortering utförs enligt algoritmen
+mergesort
+60  20  30  90 10  70  40
+60  20  30           |        90  10  70  40
+
+60   |    20  30     |      90  10  |    70  40
+60   |   20  30      |    10  90    |  40  70
+20  30  60           |       10  40  70  90
+10  20  30  40  60  70  90
+quicksort (pivot sista elementet och partitionering enligt Lomutos)
+60  20  30  90  10  70  40
+20  30  10  40  60  90  70
+10  20  30  40  60  70  90
+heapsort
+90  60  70  20  10  30  40
+40  60  70  20  10  30  90
+70  60  40  20  10  30  90
+30  60  40  20  10  70  90
+60  30  40  20  10  70  90
+10  30  40  20  60  70  90
+40  30  10  20  60  70  90
+20  30  10  40  60  70  90
+30  20  10  40  60  70  90
+10  20  30  40  60  70  90
+
+10. Vilken är tidskomplexiteten O(f(n)) i bästa, genomsnittliga och värsta fallet för quicksort, motivera bästa och värsta fallet? Värsta fallet O(n^2), dålig pivot. Bästa, genomsnittliga: O(nlogn)
+
+11. Skriv pseudokod för heapsort givet algoritmen heapify(A, fromIndex, endIndex) som hanterar att placeras elementet på fromIndex på rätt plats så att innehållet i arrayen A fr.o.m fromIndex motsvarar max-heapar, där förutsättningen är att elementen fr.om fromIndex +1 redan är max-heapar.
