@@ -238,7 +238,7 @@ På vilka index finns föräldern, vänster barn respektve höger barn till elem
 Princip 
 Visa hur följden 73  48  19  26  88  39  12  53  19  4  66  83  92  28 sorteras med heapsort
 Tidskomplexitet: n.log(n) för att bygga trädet
-Stabil? Inplace?: 
+Stabil? Nej. Inplace? 
 d-heap: mer än 2 barn på trädet. dn+1 dn+2 => barn. (4-1)/d => räkna föräldra
 
 ==========================
@@ -248,9 +248,38 @@ Omfattar primärt Countingsort, Radixsort samt tillbakablick/repetition Heapsort
 
 ### 1. Countingsort
 Princip (olika bearbetningssteg): A är den listan/arrayen som behöver sortera. Skapa 2 listor/array C och D. Max[A] = k. C[0->k+q]. C[A[i]] = C[A[j]+1]. B[C[A[j]]] = A[j]
-Vi gör något exempel
-Tidskomplexitet O(k+n). 
-Stabil? Ja. In-place? Nej, för att det krävs extra minne.
+Vi gör något exempel: 
+```
+A:  5  4  0  5  5  4  2  0  1
+
+Steg1:
+A:  5  4  0  5  5  4  2  0  1
+C:  0  0  0  0  0  0
+
+Steg 2:
+A:          5  4  0  5  5  4  2  0  1
+B:
+C:          2  1  1  0  2  3
+Index C:    0  1  2  3  4  5 
+
+
+Steg3:
+A:          5  4  0  5  5  4  2  0  1
+B: 
+C:          2  3  4  4  6  9
+Index C:    0  1  2  3  4  5 
+
+
+Steg 4:
+A:          5  4  0  5  5  4  2  0  1
+B:          0  0  1  2  4  4  5  5  5
+C:          0  2  3  4  4  6    (Minska med 1 först innan man stoppar det på array B)
+Index C:    0  1  2  3  4  5 
+```
+
+Tidskomplexitet **O(k+n) (k = max)**
+Stabil? Ja. **(om man sorterar det bak ifrån bara).**
+In-place? Nej, för att det krävs extra minne.
 
 ### 2. Bucketsort: 
 O(n) i sitt medel/förväntade fall. Delar upp datan i "hinkar" sedan använder elementen som nycklar/index. 
@@ -265,11 +294,36 @@ Vi gör något exempel
 Tidskomplexitet: O(d(n+k))
 Stabil? Ja. In-place? Nej.
 Bättra val än CountingSort om värdena skalar kvadratiskt gentemot antalet element.
+```
+A:          02  14  07  10
+Index C:    0  1  2  3  4  5  6  7 
+C:          1  0  1  0  1  0  0  1
+
+A:          02  14  07  10
+Index C:    0  1  2  3  4  5  6  7 
+C:          1  1  2  2  3  3  3  4
+B:          10  02  14  07
+
+
+A:          02  14  07  10
+Index C:    0  1  
+C:          2  2
+B:          02  07  10  14
+
+A:          02  14  07  10
+Index C:    0  1  
+C:          2  4
+B:          02  07  10  14
+```
 
 ### 4. Heapsort
-Repeterar kort
+Repeterar kort. När man byggar en max-heap kollar man ner-upp och bytter plats om de behövs.
 Vi gör eventuellt något exempel
 Radixsort vs Heapsort
+d(k+n)  s n(logn)
+d=4, k=10, n=500 => Radixsort:T(n)= 2040
+                    Heapsort: T(n) = 500(log(500)) = 500.9 = 4500
+
 
 ### 5. Vilken/Vilka är stabila? 
 Insertionsort, mergesort, bucketsort, counting sort, radixsort.
@@ -281,34 +335,57 @@ Hybridsorteringen väljer Mergesort när elementer mer än 6. När kommer elemen
 ===============
 ## Seminarium A3: Tillägg (repetition Del A)
 1. Bestäm Θ-notationer för funktionerna
-g(n) = 34.5n2 + 16nlogn + 12 => n2
-h(n) = 53.7 => 1
-f(n) = 4.5 + 8.7logn => log n
+```
+g(n) = 34.5n2 + 16nlogn + 12 => O(n2)
+h(n) = 53.7 => O(1)
+f(n) = 4.5 + 8.7logn => O(log n)
+```
+f(n) = 4.5 + 8.7logn + 5n=> 5n växer snabbare än 8.7log n => O(n)
+
 
 2. Visa att g(n) = 2n2 + 4n + 10 = Θ(n2) 
+```
 n >= 4: 4n <= n^2
         10 < n^2 
         2n^2 + 4n + 10 < 4n^2
 
 2n^2 + 4n + 10 >= 1*n^2 
-=> g(n) = 2n2 + 4n + 10 = Θ(n2) 
+=> g(n) = 2n2 + 4n + 10 = Θ(n2)
+```
 
 3. Vid exekvering (värsta fallet) av en algoritm med T(n) =  Ο(n3) tog det 0.5 ms när n=2000. Hur lång tid kommer det då att ta om n ökas till 4000? => 4ms
 
 4. Vid exekvering (värsta fallet) av en algoritm med T(n) =  Ο(log2n) tog det 1 mikrosekund när n=100. Vid en annan exekvering (värsta fallet) av samma algoritm tog det 4 mikrosekunder. Hur var n vid detta tillfälle? => 100^4
 
 5. Anta sekvensen 10 15 22 28 34 45 50 58 60 73 79 85 93 och sökning av elementet 66 utförs enligt algoritmen för binärsökning. Hur många kontrollen/jämförelser görs mot elementet i sekvensen under denna sökning och vilka element kommer att jämföras med 66? 
+```
 steg 1: 50 => höger
 steg 2: 73 => vänster
 steg 3: 58 => höger
 steg 4: 60 => inte finns 66.
 => 4 jämföras och det är 60 som jämföras med 66.
+```
 
-6. Skriv pseudokod för rekursiv binärsökning
+6. Skriv pseudokod för rekursiv binärsökning:
+```
+BinarySearch(A, x)
+low = 0
+high = length[A]-1
+while low <= high
+    mid = (low + high)/2
+    if x == A[mid]
+        return mid
+    if x < A[mid]
+        high = mid - 1
+    else if x > A[mid]
+        low = mid + 1
+return -1
+```
 
 7. Vilket är värsta fallet för linjärsökning och vilken tidskomplexitet gäller för detta fall? O(n) när den som vi söker ligger i sista plats
 
 8. Visa hur sekvensen 60  20  30  90 10  70 bearbetas om sortering utförs enligt algoritmen 
+```
 insertionsort: 
 60  20  30  90  10  70
 20  60  30  90  10  70
@@ -316,26 +393,36 @@ insertionsort:
 20  30  60  90  10  70
 10  20  30  60  90  70
 10  20  30  60  70  90
+```
+
+```
 selectionsort: 
 10  20  30  90  60  70
 10  20  30  90  60  70
 10  20  30  90  60  70
 10  20  30  60  90  70
 10  20  30  60  70  90
+```
 
 9. Visa hur sekvensen 60  20  30  90 10  70 40 bearbetas om sortering utförs enligt algoritmen
+```
 mergesort
 60  20  30  90 10  70  40
 60  20  30           |        90  10  70  40
 
 60   |    20  30     |      90  10  |    70  40
 60   |   20  30      |    10  90    |  40  70
-20  30  60           |       10  40  70  90
+20  30  60           |       10  40  70  90 
 10  20  30  40  60  70  90
+```
+
+```
 quicksort (pivot sista elementet och partitionering enligt Lomutos)
 60  20  30  90  10  70  40
 20  30  10  40  60  90  70
 10  20  30  40  60  70  90
+```
+```
 heapsort
 90  60  70  20  10  30  40
 40  60  70  20  10  30  90
@@ -347,7 +434,29 @@ heapsort
 20  30  10  40  60  70  90
 30  20  10  40  60  70  90
 10  20  30  40  60  70  90
-
+```
 10. Vilken är tidskomplexiteten O(f(n)) i bästa, genomsnittliga och värsta fallet för quicksort, motivera bästa och värsta fallet? Värsta fallet O(n^2), dålig pivot. Bästa, genomsnittliga: O(nlogn)
 
 11. Skriv pseudokod för heapsort givet algoritmen heapify(A, fromIndex, endIndex) som hanterar att placeras elementet på fromIndex på rätt plats så att innehållet i arrayen A fr.o.m fromIndex motsvarar max-heapar, där förutsättningen är att elementen fr.om fromIndex +1 redan är max-heapar.
+```
+Heapsort(A)
+    for i = Length(A)/2 to 1
+        Heapify(A, i, Length(A))
+    for i = Length(A) to 1
+        Swap(A[1], A[i])
+        Heapify(A, 1, i-1)
+        
+Heapify(A, i, n)
+    max = i
+    leftchild = 2 * i
+    rightchild = 2 * i + 1
+
+    if (leftchild <= n) and (A[leftchild] > A[max])
+        max = leftchild
+    if (rightchild <= n) and (A[rightchild] > A[max])
+        max = rightchild
+
+    if (max != i)
+        Swap(A[i], A[max])
+        Heapify(A, max, n)
+```
