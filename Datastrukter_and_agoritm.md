@@ -460,3 +460,276 @@ Heapify(A, i, n)
         Swap(A[i], A[max])
         Heapify(A, max, n)
 ```
+
+=============================
+# Vecka 4
+## Seminarium B1
+- Omfattar primärt  Länkade listor samt Stack och Kö.
+
+### 1. Länkade listor
+
+- Ett altenativ till arrayer för att lagra data. Data-objekt (noder) länkas ihop istället för att ligga fi följd i minnet.
+
+✅ 1. Länkade listor
+🔸 Länkalternativ:
+Enkellänkning: Varje nod har en pekare till nästa nod.
+Dubbellänkning: Varje nod har två pekare – en till nästa nod och en till föregående.
+
+🔸 Klasstyp för att representera list-element:
+plaintext
+Copy
+Edit
+class Node:
+    data        // det som ska lagras
+    next        // pekare till nästa list-element
+
+    constructor(data, next):
+        this.data = data
+        this.next = next
+🔸 Uppbyggnad:
+Start-element: Pekare till det första elementet i listan (vanligtvis kallad head)
+
+Slut-element: Det sista elementet vars next är null
+
+Cirkulär lista: Det sista elementets next pekar tillbaka på det första elementet (head), vilket skapar en sluten cirkel
+
+✅ Pseudo-kod för enkellänkad lista
+1. Lägg till ett element först i listan
+plaintext
+Copy
+Edit
+function insertFirst(head, data):
+    newNode = Node(data, head)
+    return newNode
+Tidskomplexitet: O(1)
+
+2. Bestäm antalet element i listan
+plaintext
+Copy
+Edit
+function countElements(head):
+    count = 0
+    current = head
+    while current != null:
+        count = count + 1
+        current = current.next
+    return count
+Tidskomplexitet: O(n)
+
+3. Lägg till ett element på en viss position
+plaintext
+Copy
+Edit
+function insertAt(head, position, data):
+    if position == 0:
+        return insertFirst(head, data)
+
+    current = head
+    index = 0
+    while current != null and index < position - 1:
+        current = current.next
+        index = index + 1
+
+    if current == null:
+        error("Position out of bounds")
+
+    newNode = Node(data, current.next)
+    current.next = newNode
+    return head
+Tidskomplexitet: O(n)
+
+4. Ta bort ett element från listan givet positionen
+plaintext
+Copy
+Edit
+function removeAt(head, position):
+    if head == null:
+        error("List is empty")
+
+    if position == 0:
+        return head.next
+
+    current = head
+    index = 0
+    while current != null and index < position - 1:
+        current = current.next
+        index = index + 1
+
+    if current == null or current.next == null:
+        error("Position out of bounds")
+
+    current.next = current.next.next
+    return head
+Tidskomplexitet: O(n)
+
+
+
+### 2. Stack 
+
+Operationer
+#### 2.1. Alternativ på intern datastruktur: 
+
+En stack kan implementeras med:
+
+Array (statisk storlek) – snabb tillgång men begränsad kapacitet.
+
+Dynamisk array (t.ex. vector i C++) – flexibel storlek.
+
+Länkad lista – dynamisk, effektiv för minnesanvändning.
+
+
+#### 2.2. Tidskomplexitet för operationerna
+🔸 Tidskomplexitet för operationerna (generellt):
+
+Operation	Tidskomplexitet
+push(x)	O(1)
+pop()	O(1)
+peek() eller top()	O(1)
+isEmpty()	O(1)
+
+#### 2.3. 
+Anta att du har tillgång till ADT:n Stack och att följande operationer utförs på en från början tom stack 
+
+push(V), push(X), push(R), push(Z)
+output result of peek() => Z
+push(H)
+output result of peek() => H
+pop(), pop()
+output result of peek() => R
+pop()
+output result of peek() => X
+
+Vilken utskriften erhålls av ovan pseudokod om output result of resulterar i utskrift?
+
+#### 2.4. Använd ADT:n Stack för att vända om innehållet i en array givet arrayen och dess kapacitet. Skriv bearbetningen i pseudokod.
+
+- Antag:
+
+    - arr är en array av storlek n
+
+    - stack är en tom stack
+```
+function reverseArray(arr, n):
+    stack = Stack()
+
+    // Push all elements to stack
+    for i = 0 to n - 1:
+        stack.push(arr[i])
+
+    // Pop elements back into array
+    for i = 0 to n - 1:
+        arr[i] = stack.pop()
+```
+
+
+### 3.Kö
+
+- Operationer
+🔸 ADT-operationer:
+
+Operation	Beskrivning
+enqueue(x)	Lägger till ett element längst bak i kön
+dequeue()	Tar bort och returnerar elementet längst fram
+peek() / front()	Returnerar det första elementet utan att ta bort det
+isEmpty()	Returnerar true om kön är tom
+
+#### 3.1 Alternativ på intern datastruktur
+- Array (cirkulär array) – snabba operationer, kräver spårning av front och rear.
+
+- Dynamisk array (t.ex. vector) – flexibel storlek, men kräver skiftning vid dequeue().
+
+- Länkad lista – enkel hantering av dynamisk storlek, O(1) för båda operationerna
+#### 3.2 Tidskomplexitet för operationerna
+✅ Tidskomplexitet (för en korrekt implementerad kö):
+
+Operation	Tidskomplexitet
+enqueue(x)	O(1)
+dequeue()	O(1)
+peek()	O(1)
+isEmpty()	O(1)
+(Om man använder vector utan optimering, kan dequeue() bli O(n) pga skiftning.)
+#### 3.3. Anta att ADT:n Kö (Queue) implementerats genom användande av en array med kapaciteten 6 (indexeringen börjar på 0). Alla operationer som utförs på kön tar konstant tid.
+Om följande operationer utförs i den ordning de är angivna:
+
+enqueue(A), enqueue(B), enqueue(C), enqueue(D), 
+dequeue(), dequeue(), dequeue(),
+enqueue(E), enqueue(F), 
+dequeue(), dequeue(), 
+enqueue(G), enqueue(H) 
+
+
+Vilket är innehållet i arrayen efter det att alla operationerna är genomförda?
+
+📦 Start: [ _ _ _ _ _ _ ] (kapacitet 6)
+Vi antar en cirkulär kö där front och rear flyttas och wrappar runt vid behov.
+
+
+Steg	Operation	Front	Rear	Innehåll i array (index 0–5)
+1	enqueue(A)	0	0	[A _ _ _ _ _]
+2	enqueue(B)	0	1	[A B _ _ _ _]
+3	enqueue(C)	0	2	[A B C _ _ _]
+4	enqueue(D)	0	3	[A B C D _ _]
+5	dequeue()	1	3	[A B C D _ _] (A tas bort, ignoreras)
+6	dequeue()	2	3	[A B C D _ _] (B tas bort)
+7	dequeue()	3	3	[A B C D _ _] (C tas bort)
+8	enqueue(E)	3	4	[A B C D E _]
+9	enqueue(F)	3	5	[A B C D E F]
+10	dequeue()	4	5	[A B C D E F] (D tas bort)
+11	dequeue()	5	5	[A B C D E F] (E tas bort)
+12	enqueue(G)	5	0	[G B C D E F] (rear wrappar till 0)
+13	enqueue(H)	5	1	[G H C D E F] (rear till index 1)
+❗ Observera att de borttagna värdena (t.ex. A, B, C...) tekniskt finns kvar i arrayen, men anses inte längre vara en del av kön eftersom front har flyttats.
+✅ Slutligt innehåll i arrayen (positioner 0–5):
+plaintext
+Copy
+Edit
+[G, H, C, D, E, F]  
+Men det aktuella innehållet i kön, i rätt ordning, är:
+
+plaintext
+Copy
+Edit
+F, G, H
+(Med front på index 5 och rear på index 1 – cirkulär hantering.)
+
+#### 3.4. Skriv pseudokod för alla operationerna som ingår i ADT:n Queue där du ska använda ADT:n Vector som intern datastruktur. Vectorn (vars positioner börjar på 0) har följande operationer
+addAt(elem, pos) - lägger till elem på positionen pos
+size() - ger antalet element i listan
+remove(pos) - tar bort elementet på positionen pos 
+find(elem) - returnerar den position som elem finns på, men om elem inte finns returneras 
+
+
+
+Antag att vi använder en ADT Vector med:
+
+addAt(elem, pos)
+
+remove(pos)
+
+size()
+
+find(elem)
+```
+Klass: Queue
+plaintext
+Copy
+Edit
+class Queue:
+    vector = new Vector()
+
+    function enqueue(elem):
+        vector.addAt(elem, vector.size())   // lägg till sist
+
+    function dequeue():
+        if isEmpty():
+            error("Queue is empty")
+        vector.remove(0)                    // ta bort först
+
+    function peek():
+        if isEmpty():
+            error("Queue is empty")
+        return vector[0]
+
+    function isEmpty():
+        return vector.size() == 0
+```
