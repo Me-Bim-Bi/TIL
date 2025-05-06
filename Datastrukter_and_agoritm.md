@@ -467,129 +467,116 @@ Heapify(A, i, n)
 - Omfattar primärt  Länkade listor samt Stack och Kö.
 
 ### 1. Länkade listor
-
 - Ett altenativ till arrayer för att lagra data. Data-objekt (noder) länkas ihop istället för att ligga fi följd i minnet.
 
-✅ 1. Länkade listor
-🔸 Länkalternativ:
-Enkellänkning: Varje nod har en pekare till nästa nod.
-Dubbellänkning: Varje nod har två pekare – en till nästa nod och en till föregående.
-
-🔸 Klasstyp för att representera list-element:
-plaintext
-Copy
-Edit
-class Node:
+#### 1.1. Länkade listor
+-  Länkalternativ: 
+    - Enkellänkning: Varje nod har en pekare till nästa nod.
+    - Dubbellänkning: Varje nod har två pekare – en till nästa nod och en till föregående.
+    - Cirkurlär: den sista perka på den första
+- Data ligger inte på samma plats i minne ... de ligger var som helst.
+- Klasstyp för att representera list-element:
+    - plaintext
+    - Copy
+    - Edit
+    - class Node:
+    ```
     data        // det som ska lagras
     next        // pekare till nästa list-element
 
     constructor(data, next):
         this.data = data
         this.next = next
-🔸 Uppbyggnad:
-Start-element: Pekare till det första elementet i listan (vanligtvis kallad head)
+    ```
+-  Uppbyggnad:
+    - Start-element: Pekare till det första elementet i listan (vanligtvis kallad head)
+    - Slut-element: Det sista elementet vars next är null
+    - Cirkulär lista: Det sista elementets next pekar tillbaka på det första elementet (head), vilket skapar en sluten cirkel
 
-Slut-element: Det sista elementet vars next är null
+- Pseudo-kod för enkellänkad lista:
+    - A, B, C
+```
+for(i==0; i<pos;i++)
+    current = current->next
+    i++
+```
 
-Cirkulär lista: Det sista elementets next pekar tillbaka på det första elementet (head), vilket skapar en sluten cirkel
+- tillägga värdet till D
+```
+current->data = "D"
+```
 
-✅ Pseudo-kod för enkellänkad lista
-1. Lägg till ett element först i listan
-plaintext
-Copy
-Edit
-function insertFirst(head, data):
-    newNode = Node(data, head)
-    return newNode
-Tidskomplexitet: O(1)
+- Ändra det första till B, A blir den sista
+```
+temp = current.next
+current.next = current.next.next
+start = temp
+```
 
-2. Bestäm antalet element i listan
-plaintext
-Copy
-Edit
-function countElements(head):
-    count = 0
-    current = head
-    while current != null:
-        count = count + 1
+- Lägg till ett element först i listan
+```
+addFirst(elem)
+    tmp = start
+    newNode = Node(elem)
+    newNode.next = tmp
+    start = newNode
+```
+    - Tidskomplexitet: O(1)
+
+- Bestäm antalet element i listan
+```
+size()
+    current = start
+    while(current.next != null)
         current = current.next
-    return count
-Tidskomplexitet: O(n)
+```
+    - Tidskomplexitet: O(n)
 
-3. Lägg till ett element på en viss position
-plaintext
-Copy
-Edit
-function insertAt(head, position, data):
-    if position == 0:
-        return insertFirst(head, data)
-
-    current = head
-    index = 0
-    while current != null and index < position - 1:
+- Lägg till ett element på en viss position
+```
+addAt(elem,i)
+    current = start
+    for(j = 0, i < j, i++)
         current = current.next
-        index = index + 1
-
-    if current == null:
-        error("Position out of bounds")
-
-    newNode = Node(data, current.next)
+    tmp = current.next
+    newNode = Node()
+    newNode.next = tmp
     current.next = newNode
-    return head
-Tidskomplexitet: O(n)
-
-4. Ta bort ett element från listan givet positionen
-plaintext
-Copy
-Edit
-function removeAt(head, position):
-    if head == null:
-        error("List is empty")
-
-    if position == 0:
-        return head.next
-
-    current = head
-    index = 0
-    while current != null and index < position - 1:
-        current = current.next
-        index = index + 1
-
-    if current == null or current.next == null:
-        error("Position out of bounds")
-
-    current.next = current.next.next
-    return head
-Tidskomplexitet: O(n)
-
-
+```
+    - Tidskomplexitet: O(n)
+- Ta bort ett element från listan givet positionen
+```
+del(i)
+    addAt(elem,i)
+        current = start
+        for(j = 0, i < j, i++)
+            current = current.next
+        temp = current.next
+        current.next = current.next.next
+        del(elem) eller del(tmp)
+```
+    - Tidskomplexitet: O(n)
 
 ### 2. Stack 
-
-Operationer
 #### 2.1. Alternativ på intern datastruktur: 
-
-En stack kan implementeras med:
-
-Array (statisk storlek) – snabb tillgång men begränsad kapacitet.
-
-Dynamisk array (t.ex. vector i C++) – flexibel storlek.
-
-Länkad lista – dynamisk, effektiv för minnesanvändning.
-
+- En stack kan implementeras med:
+    - Array (statisk storlek) – snabb tillgång men begränsad kapacitet.
+    - Dynamisk array (t.ex. vector i C++) – flexibel storlek.
+    - Länkad lista – dynamisk, effektiv för minnesanvändning.
+    - Efter "pop": A(index 0), B(1), C(2) => A,B och head = 1
 
 #### 2.2. Tidskomplexitet för operationerna
 🔸 Tidskomplexitet för operationerna (generellt):
-
-Operation	Tidskomplexitet
-push(x)	O(1)
-pop()	O(1)
-peek() eller top()	O(1)
-isEmpty()	O(1)
+|Operation                                | Tidskomplexitet                                               |
+| ----------------------------------------- | -------------------------------------------------  |
+|push(x)	|O(1)|
+|pop()|	O(1)|
+|peek() eller top()|	O(1)|
+|isEmpty()|	O(1)|
+- När man måste "push" på ett fullt array => måste man flytta objekt då blir tidskomplexitet inte 1 länge men mest är O(1)
 
 #### 2.3. 
-Anta att du har tillgång till ADT:n Stack och att följande operationer utförs på en från början tom stack 
-
+- Vilken utskriften erhålls av ovan pseudokod om output result of resulterar i utskrift? Anta att du har tillgång till ADT:n Stack och att följande operationer utförs på en från början tom stack. 
 push(V), push(X), push(R), push(Z)
 output result of peek() => Z
 push(H)
@@ -599,65 +586,67 @@ output result of peek() => R
 pop()
 output result of peek() => X
 
-Vilken utskriften erhålls av ovan pseudokod om output result of resulterar i utskrift?
-
 #### 2.4. Använd ADT:n Stack för att vända om innehållet i en array givet arrayen och dess kapacitet. Skriv bearbetningen i pseudokod.
-
-- Antag:
-
-    - arr är en array av storlek n
-
-    - stack är en tom stack
 ```
-function reverseArray(arr, n):
-    stack = Stack()
-
-    // Push all elements to stack
-    for i = 0 to n - 1:
-        stack.push(arr[i])
-
-    // Pop elements back into array
-    for i = 0 to n - 1:
-        arr[i] = stack.pop()
+reverse(a,n)
+    s = stack()
+    for(i =0; i<n; i++>)
+        s.push(a[i])
+    for(i =0; i<n; i++>)
+        a[i] = s.pop()
 ```
-
 
 ### 3.Kö
-
 - Operationer
-🔸 ADT-operationer:
-
-Operation	Beskrivning
-enqueue(x)	Lägger till ett element längst bak i kön
-dequeue()	Tar bort och returnerar elementet längst fram
-peek() / front()	Returnerar det första elementet utan att ta bort det
-isEmpty()	Returnerar true om kön är tom
+|Operation                                | Beskrivning                                              |
+| ----------------------------------------- | -------------------------------------------------  |
+|enqueue(x)	|Lägger till ett element längst bak i kön|
+|dequeue()	|Tar bort och returnerar elementet längst fram|
+|peek() front()	|Returnerar det första elementet utan att ta bort det|
+|isEmpty()	|Returnerar true om kön är tom|
 
 #### 3.1 Alternativ på intern datastruktur
 - Array (cirkulär array) – snabba operationer, kräver spårning av front och rear.
-
 - Dynamisk array (t.ex. vector) – flexibel storlek, men kräver skiftning vid dequeue().
-
 - Länkad lista – enkel hantering av dynamisk storlek, O(1) för båda operationerna
+
 #### 3.2 Tidskomplexitet för operationerna
-✅ Tidskomplexitet (för en korrekt implementerad kö):
+|Operation                                | Tidskomplexitet                                               |
+| ----------------------------------------- | -------------------------------------------------  |
+|enqueue(x)	|O(1)|
+|dequeue()|	O(1)|
+|peek() front()|	O(1)|
+|isEmpty()|	O(1)|
+- (Om man använder vector utan optimering, kan dequeue() bli O(n) pga skiftning.)
+```
+Class Queue:
+    v = Vector()
 
-Operation	Tidskomplexitet
-enqueue(x)	O(1)
-dequeue()	O(1)
-peek()	O(1)
-isEmpty()	O(1)
-(Om man använder vector utan optimering, kan dequeue() bli O(n) pga skiftning.)
-#### 3.3. Anta att ADT:n Kö (Queue) implementerats genom användande av en array med kapaciteten 6 (indexeringen börjar på 0). Alla operationer som utförs på kön tar konstant tid.
-Om följande operationer utförs i den ordning de är angivna:
+    addAT(elem,pos)
+        v.insert(elem,pos)
+    
+    size()
+        v.size()
 
+    remove(pos)
+        v.erase(pos)
+        
+
+    find(elem) //det är inte bra lösning
+        for(i=0; i<v.size();i++)
+            if(elem == v.[i])
+                return v[i]
+            return -1
+```
+
+#### 3.3. Anta att ADT:n Kö (Queue) implementerats genom användande av en array med kapaciteten 6 (indexeringen börjar på 0). Alla operationer som utförs på kön tar konstant tid. Om följande operationer utförs i den ordning de är angivna:
+```
 enqueue(A), enqueue(B), enqueue(C), enqueue(D), 
 dequeue(), dequeue(), dequeue(),
 enqueue(E), enqueue(F), 
 dequeue(), dequeue(), 
 enqueue(G), enqueue(H) 
-
-
+```
 Vilket är innehållet i arrayen efter det att alla operationerna är genomförda?
 
 📦 Start: [ _ _ _ _ _ _ ] (kapacitet 6)
@@ -733,3 +722,282 @@ class Queue:
     function isEmpty():
         return vector.size() == 0
 ```
+
+================
+# Vecka 5
+## Seminarium B2
+### 1. Heap
+- Operationer
+    - insert(element)
+    - extract_min() / extract_max()
+    - peek() (hämta min/max utan att ta bort)
+    - heapify() (bygga heap från lista)
+
+-  Intern datastruktur
+    - Oftast implementerad som en binär heap i en array:
+    - Föräldern till element vid index i ligger vid (i - 1) // 2
+    - Vänster barn: 2 * i + 1
+    - Höger barn: 2 * i + 2
+
+- Tidskomplexitet
+    - Operation	Tidskomplexitet
+    insert	O(log n)
+    extract min/max	O(log n)
+    peek	O(1)
+    build-heap	O(n)
+
+### 2. Prioritetskö
+- Operationer
+    - insert(element, priority)
+    - extract_max() eller extract_min()
+    - peek()
+    - change_priority(element, new_priority)
+
+- Alternativ för intern datastruktur
+    - Binär heap (vanligast)
+    - Binomial heap
+    - Fibonacci heap (för avancerade användningsfall)
+    - Obalanserat array eller lista (ineffektivt)
+
+- Tidskomplexitet (för binär heap)
+    - Operation	Tidskomplexitet
+    insert	O(log n)
+    extract max/min	O(log n)
+    peek	O(1)
+    change priority	O(log n)
+
+- Pseudokod: Heapsort med en prioritetskö (min-heap)
+```
+function heapSort(array):
+    create an empty min-heap
+    for element in array:
+        insert element into heap
+
+    result = []
+    while heap is not empty:
+        result.append(extract_min())
+    return result
+```
+- Tidskomplexitet:
+    - Bygga heap: O(n)
+    - N extraktioner: O(n log n)
+    - Total: O(n log n)
+
+### 3. Binärt träd 
+- Traverseringsordningar
+    - Preorder (Root-Left-Right)
+    ```
+    function preorder(node):
+        if node is not null:
+            visit(node)
+            preorder(node.left)
+            preorder(node.right)
+    ```
+    - Inorder (Left-Root-Right)
+    ```
+    function inorder(node):
+        if node is not null:
+            inorder(node.left)
+            visit(node)
+            inorder(node.right)
+    ````
+
+    - Postorder (Left-Right-Root)
+    ```
+    function postorder(node):
+        if node is not null:
+            postorder(node.left)
+            postorder(node.right)
+            visit(node)
+    ```
+-  Tidskomplexitet
+    - Alla tre: O(n) (varje nod besöks exakt en gång)
+
+### 4. BST 
+- Definition
+    - Ett binärt träd där varje nod uppfyller:
+        - Vänster barn < nodens värde
+        - Höger barn > nodens värde
+
+- Exempeloperationer:
+    - Insättning
+    ```
+    function insert(node, value):
+        if node is null:
+            return new Node(value)
+        if value < node.value:
+            node.left = insert(node.left, value)
+        else:
+            node.right = insert(node.right, value)
+        return node
+    ```
+    - Sökning
+    ```
+    function search(node, value):
+        if node is null or node.value == value:
+            return node
+        if value < node.value:
+            return search(node.left, value)
+        else:
+            return search(node.right, value)
+    ```
+    - Borttagning (översiktligt)
+        - Om noden är ett löv → ta bort direkt.
+        - En undernod → ersätt med barnet.
+        - Två undernoder → hitta in-order successor (minsta i högerträd) och byt plats.
+
+- Tidskomplexitet
+Operation	Bästa genomsnittliga fall	Värsta fall (obalanserat)
+Sökning	O(log n)	O(n)
+Insättning	O(log n)	O(n)
+Borttagning	O(log n)	O(n)
+
+======================
+# Vecka 6
+## Serminarium B3
+### 1. 
+
+
+
+
+
+=====================
+
+# Övningsuppgifter
+## B-delen
+### 1. Vad är ett dynamic set (dynamisk mängd)?
+En dynamisk mängd är en samling element som kan ändras över tid – du kan lägga till, ta bort eller söka efter element. Motsatsen är en statisk mängd, där innehållet är fast.
+
+### 2. Fyra typiska operationer för en dynamisk mängd:
+- Insert(elem) – Lägger till ett element i mängden.
+- Delete(elem) – Tar bort ett specifikt element om det finns.
+- Search(elem) – Söker efter ett element och returnerar det om det finns.
+- IsEmpty() – Kontrollerar om mängden är tom.
+
+### 3. Cirkulär dubbellänkad lista
+#### a) size():
+```
+function size():
+    if current == null:
+        return 0
+    count = 1
+    node = current.next
+    while node != current:
+        count += 1
+        node = node.next
+    return count
+```
+#### b) find(elem):
+```
+function find(elem):
+    if current == null:
+        return false
+    node = current
+    do:
+        if node.data == elem:
+            return true
+        node = node.next
+    while node != current
+    return false
+```
+#### c) nrOfOccurences(elem):
+```
+function nrOfOccurences(elem):
+    if current == null:
+        return 0
+    count = 0
+    node = current
+    do:
+        if node.data == elem:
+            count += 1
+        node = node.next
+    while node != current
+    return count
+```
+#### d) removeCurrentElement():
+```
+function removeCurrentElement():
+    if current == null:
+        return
+    if current.next == current:  // Enda noden
+        current = null
+    else:
+        current.prev.next = current.next
+        current.next.prev = current.prev
+        current = current.next
+```
+
+### 4. insertSorted(elem) för sorterad dubbellänkad lista:
+```
+function insertSorted(elem):
+    newNode = new Node(elem)
+    if head == null:
+        head = newNode
+        return
+    if elem < head.data:
+        newNode.next = head
+        head.prev = newNode
+        head = newNode
+        return
+    current = head
+    while current.next != null and current.next.data < elem:
+        current = current.next
+    newNode.next = current.next
+    if current.next != null:
+        current.next.prev = newNode
+    current.next = newNode
+    newNode.prev = current
+```
+
+### 5. Principen för Stack (LIFO):
+- En stack fungerar enligt Last In, First Out-principen. Den senaste som läggs på är den första som tas bort.
+- push(elem): Lägg till ett element överst.
+- pop(): Ta bort och returnera det översta elementet.
+- peek(): Returnera det översta elementet utan att ta bort det.
+### 6. Visa innehållet i stacken om följande operationer utförs i tur och ordning på en från början tom
+- Stack
+- push(W), push(R), push(Q), pop(), pop(), push(H), push(Y), pop() => WH där H är överst
+```
+class Node:
+    data
+    next
+
+class Stack:
+    top = null
+
+    function push(elem):
+        node = new Node(elem)
+        node.next = top
+        top = node
+
+    function pop():
+        if top == null:
+            return null
+        elem = top.data
+        top = top.next
+        return elem
+```
+### 7. Beskriv principen för ATD Kö (Queue) och operationerna enqueue och dequeue.
+- FIFO: 
+- engueue(elem) placerar elementet sist i kön, 
+- dequeue tar bort det element som är först i kön.
+
+### 8. Visa innehållet i kön om följande operationer utförs i tur och ordning på en från början tom Kö
+enqueue(W), enqueue (R), enqueue (Q), dequeue(), dequeue (), enqueue(H), enqueue (Y), dequeue (), enqueue(S) => HYS där H är först och S är sist
+
+### 9. Redogör för hur operationerna på en Kö hanteras om en array med kapaciteten 5 används.
+Tidskomplexiteten för respektive operation förutsätts vara O(1)
+a. Visa dessutom för operationerna i föregående uppgift innehållet i arrayen
+b. Visa dessutom vilket innehålla arrayen har efter det att följande operationer utförts på
+en från början tom kö, queque
+for i=0 to 4
+queue.enqueue(i)
+for i=0 to 3
+queue.dequeue()
+for i=0 to 4
+queue.enqueue(i)
+for i=0 to 3
+queue.dequeue()
+
+### 10. Redogör för hur operationerna på en Kö hanteras om en enkellänkad lista används.
+Tidskomplexiteten för respektive operation förutsätts vara O(1)

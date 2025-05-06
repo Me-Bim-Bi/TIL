@@ -1,8 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/x64/ninja -G Ninja -S "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/Module3" -B "/Users/chuhathanh/Workspaces/Thanhs Workspaces/TIL/C++/Module3/cmake-build-debug"
-CMake Error at CMakeLists.txt:6 (add_executable):
-  The target name "/Users/chuhathanh/Workspaces/Thanhs" is reserved or not
-  valid for certain CMake features, such as generator expressions, and may
-  result in undefined behavior.
-
-
--- Configuring incomplete, errors occurred!
