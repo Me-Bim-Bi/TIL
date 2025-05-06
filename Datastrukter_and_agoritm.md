@@ -473,14 +473,11 @@ Heapify(A, i, n)
 -  Länkalternativ: 
     - Enkellänkning: Varje nod har en pekare till nästa nod.
     - Dubbellänkning: Varje nod har två pekare – en till nästa nod och en till föregående.
-    - Cirkurlär: den sista perka på den första
+    - Cirkurlär: den sista perkar på den första
 - Data ligger inte på samma plats i minne ... de ligger var som helst.
 - Klasstyp för att representera list-element:
-    - plaintext
-    - Copy
-    - Edit
-    - class Node:
     ```
+    class Node:
     data        // det som ska lagras
     next        // pekare till nästa list-element
 
@@ -563,7 +560,6 @@ del(i)
     - Array (statisk storlek) – snabb tillgång men begränsad kapacitet.
     - Dynamisk array (t.ex. vector i C++) – flexibel storlek.
     - Länkad lista – dynamisk, effektiv för minnesanvändning.
-    - Efter "pop": A(index 0), B(1), C(2) => A,B och head = 1
 
 #### 2.2. Tidskomplexitet för operationerna
 🔸 Tidskomplexitet för operationerna (generellt):
@@ -597,13 +593,12 @@ reverse(a,n)
 ```
 
 ### 3.Kö
-- Operationer
 |Operation                                | Beskrivning                                              |
 | ----------------------------------------- | -------------------------------------------------  |
 |enqueue(x)	|Lägger till ett element längst bak i kön|
-|dequeue()	|Tar bort och returnerar elementet längst fram|
-|peek() front()	|Returnerar det första elementet utan att ta bort det|
-|isEmpty()	|Returnerar true om kön är tom|
+|dequeue()|	Tar bort och returnerar elementet längst fram|
+|peek() front()|	Returnerar det första elementet utan att ta bort det|
+|isEmpty()|	Returnerar true om kön är tom|
 
 #### 3.1 Alternativ på intern datastruktur
 - Array (cirkulär array) – snabba operationer, kräver spårning av front och rear.
